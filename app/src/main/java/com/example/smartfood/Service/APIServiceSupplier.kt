@@ -22,8 +22,8 @@ interface APIServiceSupplier {
     @POST("supplier")
     suspend fun addSupplier(@Body supplier: SupplierRequest): Response<SupplierResponse>
 
-    //@PUT("supplier/{id}")
-    //suspend fun editSupplier(@Path("id") id: Int, @Body supplier: SupplierRequest): Response<SupplierResponse>
+    @PUT("supplier/{id}")
+    suspend fun updateSupplier(@Path("id") id: Int, @Body supplier: SupplierRequest): Response<SupplierResponse>
 
     @DELETE("supplier/{id}")
     suspend fun deleteSupplier(@Path("id") id: Int): Response<Unit>

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.Adapter.SupplierAdapter
 import com.example.smartfood.ModelResponse.SupplierResponse
 import com.example.smartfood.Request.SupplierRequest
-import com.example.smartfood.Service.APIServiceProduct
 import com.example.smartfood.Service.APIServiceSupplier
 import com.example.smartfood.databinding.FragmentSupplierBinding
 import kotlinx.coroutines.CoroutineScope
@@ -41,17 +40,18 @@ class SupplierFragment : Fragment() {
        // Configura el RecyclerView y el adaptador
        recyclerView = binding.rcyViewSupplier
        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-       adapter = SupplierAdapter(supplierList,::deleteSupplier)
+       adapter = SupplierAdapter(supplierList,::deleteSupplier,::updateSuppliers)
+
        recyclerView.adapter = adapter
 
        searchAllSupplier()
 
        //FloatingButton
-       binding.floatingButton.setOnClickListener{nextFragment()}
+       binding.floatingButton.setOnClickListener{addNewSupplierDialog()}
        return binding.root
    }
 
-    private fun nextFragment() {
+    private fun addNewSupplierDialog() {
         // Infla el layout del Custom Dialog
         val dialogView: View = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_layout_supplier, null)
 
@@ -113,6 +113,21 @@ class SupplierFragment : Fragment() {
                     searchAllSupplier()
                 } else {
                     showError()
+                }
+            }
+        }
+    }
+
+    suspend fun updateSuppliers(supplierId: Int, supplierRequest: SupplierRequest) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val apiService = getRetrofit().create(APIServiceSupplier::class.java)
+            val response = apiService.updateSupplier(supplierId, supplierRequest)  // Call editSupplier method
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    // Update UI with edited supplier data (potentially reload data)
+                    searchAllSupplier() // Assuming searchAllSupplier reloads data
+                } else {
+                    showError() // Handle API errors
                 }
             }
         }
