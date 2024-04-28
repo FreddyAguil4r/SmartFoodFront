@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Elementos"
+        android:id="@+id/items"
+        android:icon="@drawable/baseline_home_24"/>
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Inventario"
+        android:id="@+id/inventory"
+        android:icon="@drawable/baseline_all_inbox_24"/>
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Monitor"
+        android:id="@+id/trending"
+        android:icon="@drawable/baseline_trending_up_24"/>
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Proveedores"
+        android:id="@+id/supplier"
+        android:icon="@drawable/baseline_person_add"/>
+</menu>

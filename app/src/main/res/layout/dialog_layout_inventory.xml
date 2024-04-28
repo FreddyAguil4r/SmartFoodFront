@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="20dp"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <!-- PlainText para ingresar nombre -->
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:textColor="@color/md_theme_light_onPrimaryContainer"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="30dp"
+            android:text="Formulario de inventario" />
+
+        <Spinner
+            android:id="@+id/spn_name"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="30dp"
+            android:layout_height="wrap_content" />
+
+
+        <!-- Layout para los botones Cancel y Save con espacio adicional -->
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginTop="24dp">
+
+            <!-- Botón Save -->
+            <Button
+                android:id="@+id/btnSaveInventory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/md_theme_light_onPrimaryContainer"
+                android:backgroundTint="#50FBE4"
+                android:textSize="16sp"
+                android:text="Guardar" />
+
+            <!-- Botón Cancel -->
+            <Button
+                android:id="@+id/btnCancelInvetory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/md_theme_light_onPrimaryContainer"
+                android:backgroundTint="#50FBE4"
+                android:textSize="16sp"
+                android:text="Cancelar" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

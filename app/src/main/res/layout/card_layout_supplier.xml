@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_supplier"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp"
+    app:cardBackgroundColor="@color/md_theme_light_tertiaryContainer"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="10dp">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/text_supplier_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CORPORACION SEÑOR DE SAN JUAN S.A.C"
+            android:textColor="@color/md_theme_light_onPrimaryContainer"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_supplier_ruc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RUC: "
+            android:textColor="@color/md_theme_light_onPrimaryContainer"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/text_supplier_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dirección: "
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/md_theme_light_onPrimaryContainer"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Delete" />
+        </LinearLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.cardview.widget.CardView>
