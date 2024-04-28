@@ -122,9 +122,15 @@ class SupplierFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             val call = getRetrofit().create(APIServiceSupplier::class.java).deleteSupplier(supplierId)
             withContext(Dispatchers.Main){
+
+                println("call: " + call)
+
                 if(call.isSuccessful){
                     searchAllSupplier()
-                }else{
+                }else if(call.code() == 400){
+                    showErrorBadRequest()
+                }
+                else{
                     showErrorDelete()
                 }
             }
@@ -137,5 +143,8 @@ class SupplierFragment : Fragment() {
 
     private fun showErrorDelete() {
         Toast.makeText(requireContext(),"Error delete method",Toast.LENGTH_SHORT).show()
+    }
+    private fun showErrorBadRequest() {
+        Toast.makeText(requireContext(),"El proveedor tiene anidado un producto",Toast.LENGTH_SHORT).show()
     }
 }
