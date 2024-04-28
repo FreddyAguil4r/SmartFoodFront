@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.Adapter.SupplierAdapter
 import com.example.smartfood.ModelResponse.SupplierResponse
 import com.example.smartfood.Request.SupplierRequest
+import com.example.smartfood.Service.APIServiceProduct
 import com.example.smartfood.Service.APIServiceSupplier
 import com.example.smartfood.databinding.FragmentSupplierBinding
 import kotlinx.coroutines.CoroutineScope
@@ -40,8 +41,7 @@ class SupplierFragment : Fragment() {
        // Configura el RecyclerView y el adaptador
        recyclerView = binding.rcyViewSupplier
        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-       adapter = SupplierAdapter(supplierList)
+       adapter = SupplierAdapter(supplierList,::deleteSupplier)
        recyclerView.adapter = adapter
 
        searchAllSupplier()
@@ -118,7 +118,24 @@ class SupplierFragment : Fragment() {
         }
     }
 
+    private fun deleteSupplier(supplierId: Int){
+        CoroutineScope(Dispatchers.IO).launch {
+            val call = getRetrofit().create(APIServiceSupplier::class.java).deleteSupplier(supplierId)
+            withContext(Dispatchers.Main){
+                if(call.isSuccessful){
+                    searchAllSupplier()
+                }else{
+                    showErrorDelete()
+                }
+            }
+        }
+    }
+
     private fun showError() {
         Toast.makeText(requireContext(),"Error",Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showErrorDelete() {
+        Toast.makeText(requireContext(),"Error delete method",Toast.LENGTH_SHORT).show()
     }
 }
