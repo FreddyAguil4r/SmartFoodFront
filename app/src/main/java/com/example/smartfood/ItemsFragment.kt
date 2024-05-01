@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartfood.Adapter.CategoryAdapter
 import com.example.smartfood.ModelResponse.CategoryResponse
 import com.example.smartfood.ModelResponse.CategoryResponseI
+import com.example.smartfood.ModelResponse.ProductResponse
 import com.example.smartfood.ModelResponse.SupplierResponse
 import com.example.smartfood.Request.CategoryRequest
 import com.example.smartfood.Request.ProductRequest
@@ -47,14 +48,24 @@ class ItemsFragment : Fragment() {
     private var idCategory=0
     private var idSupplier=0
 
+    private val productList = mutableListOf<ProductResponse>()
+    val imageList = listOf(
+        R.drawable.carne,
+        R.drawable.verduras,
+        R.drawable.cereal,
+        R.drawable.suministros,
+    )
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentItemsBinding.inflate(inflater)
+
         binding.rcyView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = CategoryAdapter(categoryListI)
+        adapter = CategoryAdapter(categoryListI, imageList)
         binding.rcyView.adapter = adapter
+
         searchAllCategoriesWithProducts()
 
         binding.fabAddCategory.setOnClickListener { openDialogAddNewCategory() }
@@ -260,4 +271,5 @@ class ItemsFragment : Fragment() {
     private fun showError() {
         Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
     }
+
 }
