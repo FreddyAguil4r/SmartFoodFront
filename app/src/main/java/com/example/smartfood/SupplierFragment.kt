@@ -33,20 +33,14 @@ class SupplierFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
        binding = FragmentSupplierBinding.inflate(inflater)
 
-
-       // Configura el RecyclerView y el adaptador
        recyclerView = binding.rcyViewSupplier
        recyclerView.layoutManager = LinearLayoutManager(requireContext())
        adapter = SupplierAdapter(supplierList,::deleteSupplier,::updateSuppliers)
-
        recyclerView.adapter = adapter
 
        searchAllSupplier()
-
-       //FloatingButton
        binding.floatingButton.setOnClickListener{addNewSupplierDialog()}
        return binding.root
    }
@@ -78,14 +72,12 @@ class SupplierFragment : Fragment() {
         // Muestra el AlertDialog
         alertDialog.show()
     }
-
     private fun getRetrofit():Retrofit{
         return Retrofit.Builder()
             .baseUrl("https://smartfood-421500.uc.r.appspot.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-
     private fun searchAllSupplier(){
         CoroutineScope(Dispatchers.IO).launch {
             val call = getRetrofit().create(APIServiceSupplier::class.java).getAllSuplier("supplier/all")
@@ -104,7 +96,6 @@ class SupplierFragment : Fragment() {
             }
         }
     }
-
     private fun addSupplier(supplierRequest: SupplierRequest) {
         CoroutineScope(Dispatchers.IO).launch {
             val call = getRetrofit().create(APIServiceSupplier::class.java).addSupplier(supplierRequest)
@@ -117,7 +108,6 @@ class SupplierFragment : Fragment() {
             }
         }
     }
-
     suspend fun updateSuppliers(supplierId: Int, supplierRequest: SupplierRequest) {
         CoroutineScope(Dispatchers.IO).launch {
             val apiService = getRetrofit().create(APIServiceSupplier::class.java)
@@ -132,7 +122,6 @@ class SupplierFragment : Fragment() {
             }
         }
     }
-
     private fun deleteSupplier(supplierId: Int){
         CoroutineScope(Dispatchers.IO).launch {
             val call = getRetrofit().create(APIServiceSupplier::class.java).deleteSupplier(supplierId)
@@ -145,11 +134,9 @@ class SupplierFragment : Fragment() {
             }
         }
     }
-
     private fun showError() {
         Toast.makeText(requireContext(),"Error",Toast.LENGTH_SHORT).show()
     }
-
     private fun showErrorDelete() {
         Toast.makeText(requireContext(),"Error delete method",Toast.LENGTH_SHORT).show()
     }

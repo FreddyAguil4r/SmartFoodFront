@@ -3,6 +3,7 @@ package com.example.smartfood.Service
 import com.example.smartfood.ModelResponse.ProductResponse
 import com.example.smartfood.Request.ProductRequest
 import com.example.smartfood.Request.SupplierRequest
+import com.example.smartfood.Request.UpdateProductRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -24,7 +25,7 @@ interface APIServiceProduct {
     suspend fun addProduct(@Body supplier: ProductRequest): Response<ProductResponse>
 
     @PUT("product/{id}")
-    suspend fun editProduct(@Path("id") id: Int, @Body supplier: SupplierRequest): Response<ProductResponse>
+    suspend fun updateProduct(@Path("id") id: Int, @Body product: UpdateProductRequest): Response<ProductResponse>
 
     @DELETE("product/{id}")
     suspend fun deleteProduct(@Path("id") id: Int): Response<Unit>

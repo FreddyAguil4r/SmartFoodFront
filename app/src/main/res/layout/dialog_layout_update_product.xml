@@ -24,30 +24,30 @@
             android:textColor="@color/md_theme_light_onPrimaryContainer"
             android:gravity="center"
             android:layout_marginBottom="20dp"
-            android:text="Formulario de proveedor" />
+            android:text="@string/title_update_product" />
 
         <EditText
-            android:id="@+id/editTextNombre"
+            android:id="@+id/editNewTextNombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:hint="Nombre" />
+            android:layout_marginBottom="20dp"/>
 
         <!-- PlainText para ingresar RUC -->
         <EditText
-            android:id="@+id/editTextRUC"
+            android:id="@+id/editNewTextUnitCost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:hint="RUC" />
+            />
 
         <!-- PlainText para ingresar dirección -->
         <EditText
-            android:id="@+id/editTextDireccion"
+            android:id="@+id/editNewTextAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:layout_marginBottom="20dp"
-            android:hint="Dirección" />
+            />
 
         <!-- Layout para los botones Cancel y Save con espacio adicional -->
         <LinearLayout
@@ -58,7 +58,7 @@
 
             <!-- Botón Save -->
             <Button
-                android:id="@+id/btnSave"
+                android:id="@+id/btnSaveUpdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_theme_light_onPrimary"
@@ -68,7 +68,7 @@
 
             <!-- Botón Cancel -->
             <Button
-                android:id="@+id/btnCancel"
+                android:id="@+id/btnCancelUpdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_theme_light_onPrimary"

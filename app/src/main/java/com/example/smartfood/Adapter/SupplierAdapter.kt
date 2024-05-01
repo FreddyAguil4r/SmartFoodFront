@@ -21,7 +21,6 @@ class SupplierAdapter(private val suplierList: List<SupplierResponse>,
                       private val updateSuppliers: suspend (Int, SupplierRequest) -> Unit)
     : RecyclerView.Adapter<SupplierAdapter.ViewHolder>() {
 
-    //representa identidad indivual
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         var textTitle : TextView
         var textRuc: TextView

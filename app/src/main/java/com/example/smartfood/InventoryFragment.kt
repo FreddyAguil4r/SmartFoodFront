@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.Adapter.InventoryAdapter
 import com.example.smartfood.ModelResponse.ProductResponse
+import com.example.smartfood.Request.ProductRequest
+import com.example.smartfood.Request.UpdateProductRequest
 import com.example.smartfood.Service.APIServiceProduct
 import com.example.smartfood.databinding.FragmentInventoryBinding
 import kotlinx.coroutines.CoroutineScope
@@ -40,7 +42,7 @@ class InventoryFragment : Fragment() {
         // Configura el RecyclerView y el adaptador
         recyclerView = binding.inventoryrcv
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = InventoryAdapter(productList,::deleteProducts)
+        adapter = InventoryAdapter(productList,::deleteProducts,::updateProducts)
         recyclerView.adapter = adapter
 
         searchAllProducts()
@@ -83,6 +85,20 @@ class InventoryFragment : Fragment() {
                 if(call.isSuccessful){
                     searchAllProducts()
                 }else{
+                    showError()
+                }
+            }
+        }
+    }
+
+    suspend fun updateProducts(productId: Int, productRequest: UpdateProductRequest) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val apiService = getRetrofit().create(APIServiceProduct::class.java)
+            val response = apiService.updateProduct(productId, productRequest)
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    searchAllProducts()
+                } else {
                     showError()
                 }
             }

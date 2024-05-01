@@ -109,23 +109,9 @@ class ItemsFragment : Fragment() {
         val spinnerSupplier : TextInputLayout = dialogView.findViewById(R.id.spinner_supplier)
         val adapterSpCategory = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item,dataSpinnerCategory)
         val adapterSpSupplier = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item,dataSpinnerSupplier)
-        //adapterSpCategory.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        //adapterSpSupplier.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        //spinnerCategory.adapter = adapterSpCategory
         (spinnerCategory.editText as AutoCompleteTextView).setAdapter(adapterSpCategory)
-        //spinnerSupplier.adapter = adapterSpSupplier
         (spinnerSupplier.editText as AutoCompleteTextView).setAdapter(adapterSpSupplier)
 
-
-        /*spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
-                Log.i("ITEMSELEC","$selectedItemView $position $id" )
-            }
-
-            override fun onNothingSelected(parentView: AdapterView<*>?) {
-                Toast.makeText(requireContext(), "No se selecciono nada", Toast.LENGTH_SHORT).show()
-            }
-        }*/
         (spinnerCategory.editText as AutoCompleteTextView).onItemClickListener=AdapterView.OnItemClickListener { adapterView, view, i, l ->
             val selec=adapterView.getItemAtPosition(i)
             val idCapturado=categoryList.filter { it.name==selec }[0].id
@@ -133,15 +119,6 @@ class ItemsFragment : Fragment() {
             Log.i("ITEMSEL","$idCapturado")
         }
 
-        /*spinnerSupplier.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
-
-            }
-
-            override fun onNothingSelected(parentView: AdapterView<*>?) {
-                Toast.makeText(requireContext(), "No se selecciono nada", Toast.LENGTH_SHORT).show()
-            }
-        })*/
         (spinnerSupplier.editText as AutoCompleteTextView).onItemClickListener=AdapterView.OnItemClickListener { adapterView, view, i, l ->
             val selec=adapterView.getItemAtPosition(i)
             val idCapturado=supplierList.filter { it.name==selec }[0].id
@@ -192,16 +169,6 @@ class ItemsFragment : Fragment() {
             val cantidadStr = dialogView.findViewById<EditText>(R.id.edtAmount).text.toString()
             val costo_unitario = costo_unitarioStr.toDoubleOrNull() ?: 0.0
             val cantidad = cantidadStr.toDoubleOrNull() ?: 0.0
-
-
-            // Obtener los nombres seleccionados de los Spinners
-            //val selectedCategoryName = spinnerCategory.selectedItem.toString()
-            //val selectedSupplierName = spinnerSupplier.selectedItem.toString()
-
-            //// Buscar los ids correspondientes en las listas
-            //val categoryId = categoryList.find { it.name == selectedCategoryName }?.id ?: 0
-            //val supplierId = supplierList.find { it.name == selectedSupplierName }?.id ?: 0
-
             val productRequest = ProductRequest(nombre, selectedDate, costo_unitario, cantidad, idCategory, idSupplier)
             addProduct(productRequest)
             alertDialog.dismiss()
@@ -211,7 +178,6 @@ class ItemsFragment : Fragment() {
             alertDialog.dismiss()
         }
 
-        // Muestra el AlertDialog
         alertDialog.show()
     }
 
@@ -321,6 +287,4 @@ class ItemsFragment : Fragment() {
     private fun showError() {
         Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
     }
-
-
 }

@@ -10,6 +10,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcyViewSupplier"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -21,7 +22,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
         android:clickable="true"
-        android:backgroundTint="@color/md_theme_light_primaryContainer"
+        android:backgroundTint="@color/md_theme_light_primary"
         android:src="@drawable/baseline_add_circle_48" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
