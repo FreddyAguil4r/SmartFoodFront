@@ -7,7 +7,6 @@ import com.example.smartfood.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
     private fun setTitleBasedOnFragment(fragment: Fragment) {
         when (fragment) {
             is ItemsFragment -> supportActionBar?.title = "Elementos"
@@ -17,7 +16,6 @@ class MainActivity : AppCompatActivity() {
             else -> supportActionBar?.title = "SmartFood"
         }
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -37,7 +35,6 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
-
     private fun replaceFragment(fragment : Fragment){
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()

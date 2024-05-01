@@ -13,14 +13,11 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartfood.Adapter.CategoryAdapter
-import com.example.smartfood.Adapter.ItemsAdapter
 import com.example.smartfood.ModelResponse.CategoryResponse
 import com.example.smartfood.ModelResponse.CategoryResponseI
-import com.example.smartfood.ModelResponse.ProductResponse
 import com.example.smartfood.ModelResponse.SupplierResponse
 import com.example.smartfood.Request.CategoryRequest
 import com.example.smartfood.Request.ProductRequest
@@ -42,14 +39,11 @@ import java.util.Locale
 class ItemsFragment : Fragment() {
     private lateinit var binding: FragmentItemsBinding
     private lateinit var adapter: CategoryAdapter
-
     private val categoryList = mutableListOf<CategoryResponse>()
     private val categoryListI = mutableListOf<CategoryResponseI>()
     private val supplierList = mutableListOf<SupplierResponse>()
-
     private val dataSpinnerCategory = mutableListOf<String>()
     private val dataSpinnerSupplier = mutableListOf<String>()
-
     private var idCategory=0
     private var idSupplier=0
 
@@ -57,26 +51,18 @@ class ItemsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentItemsBinding.inflate(inflater)
-
-        //RecyclerView
         binding.rcyView.layoutManager = LinearLayoutManager(requireContext())
         adapter = CategoryAdapter(categoryListI)
         binding.rcyView.adapter = adapter
         searchAllCategoriesWithProducts()
 
-        //Fac agregar categoria
-        binding.fabAddCategory.setOnClickListener { openDialogCategory() }
-
-        //FloatActionButton agregar producto
-        binding.floatingButton.setOnClickListener { openDialog() }
-
+        binding.fabAddCategory.setOnClickListener { openDialogAddNewCategory() }
+        binding.floatingButton.setOnClickListener { openDialogAddNewProduct() }
         return binding.root
     }
 
-    //CUADRO DE DIALOGO PARA AGREGAR UNA CATEGORIA
-    private fun openDialogCategory() {
+    private fun openDialogAddNewCategory() {
         val dialogView: View =
             LayoutInflater.from(requireContext()).inflate(R.layout.dialog_layout_category, null)
         val builder = AlertDialog.Builder(requireContext())
@@ -96,8 +82,7 @@ class ItemsFragment : Fragment() {
 
         alertDialog.show()
     }
-
-    private fun openDialog() {
+    private fun openDialogAddNewProduct() {
         val dialogView: View = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_layout_items, null)
         val cancelButton: Button = dialogView.findViewById(R.id.btnCancel)
         val saveButton: Button = dialogView.findViewById(R.id.btnSave)
@@ -180,15 +165,12 @@ class ItemsFragment : Fragment() {
 
         alertDialog.show()
     }
-
     private fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://smartfood-421500.uc.r.appspot.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-
-    //FUNCION PARA AÑADIR UNA CATEGORIA
     private fun addCategory(categoryRequest: CategoryRequest) {
         CoroutineScope(Dispatchers.IO).launch {
             val call =
@@ -202,8 +184,6 @@ class ItemsFragment : Fragment() {
             }
         }
     }
-
-    //FUNCION PARA AÑADIR UNA PRODUCTO
     private fun addProduct(productRequest: ProductRequest) {
         CoroutineScope(Dispatchers.IO).launch {
             val call =
@@ -217,8 +197,6 @@ class ItemsFragment : Fragment() {
             }
         }
     }
-
-    //FUNCION PARA LISTAR TODAS LAS CATEGORIAS
     private fun searchAllCategories() {
         CoroutineScope(Dispatchers.IO).launch {
             val call = getRetrofit().create(APIServiceCategory::class.java)
@@ -240,8 +218,6 @@ class ItemsFragment : Fragment() {
             }
         }
     }
-
-    //FUNCION PARA LISTAR TODOS LOS PROVEEDORES
     private fun searchAllSupplier() {
         CoroutineScope(Dispatchers.IO).launch {
             val call =
@@ -263,8 +239,6 @@ class ItemsFragment : Fragment() {
             }
         }
     }
-
-    //FUNCION PARA LISTAR TODAS LAS CATEGORIAS CON SUS PRODUCTOS
     private fun searchAllCategoriesWithProducts() {
         CoroutineScope(Dispatchers.IO).launch {
             val call = getRetrofit().create(APIServiceCategory::class.java)
@@ -283,7 +257,6 @@ class ItemsFragment : Fragment() {
             }
         }
     }
-
     private fun showError() {
         Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
     }

@@ -1,6 +1,7 @@
 package com.example.smartfood.Adapter
 
 import android.app.AlertDialog
+import android.content.Context
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.smartfood.InventoryFragment
 import com.example.smartfood.ModelResponse.ProductResponse
 import com.example.smartfood.R
 import com.example.smartfood.Request.UpdateProductRequest
@@ -57,7 +61,6 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
         holder.deleteButton.setOnClickListener {
             deleteProducts(sup.id)
         }
-
         holder.editButton.setOnClickListener {
             val context = holder.itemView.context
             val dialogView =
@@ -85,9 +88,6 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
                 val newName = newNameEditText.text.toString()
                 val newUnitCost = newUnitCostEditText.text.toString().toDouble()
                 val newAmount = newAmountEditText.text.toString().toDouble()
-                val newDate = sup.datePurchase
-                val newCategoryId = sup.category.id
-                val newSuplierId = sup.supplier.id
                 val updatedProduct = UpdateProductRequest(
                     newName,
                     newUnitCost,
@@ -98,11 +98,30 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
                     alertDialog.dismiss()
                 }
             }
-
             cancelButton.setOnClickListener {
                 alertDialog.dismiss()
             }
             alertDialog.show()
+        }
+
+        if(sup.amount < 15){
+            showLowQuantityNotification(holder.itemView.context, sup.name)
+        }
+
+    }
+
+    private fun showLowQuantityNotification(context: Context, productName: String) {
+        val notificationId = 1 // ID único para la notificación
+
+        val builder = NotificationCompat.Builder(context, InventoryFragment.CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_dialog_alert)
+            .setContentTitle("¡Atención!")
+            .setContentText("La cantidad de $productName es baja. ¡Considere reabastecerse!")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(context)) {
+            notify(notificationId, builder.build())
         }
     }
 }
