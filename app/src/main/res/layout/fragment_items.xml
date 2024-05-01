@@ -23,7 +23,6 @@
         android:layout_marginRight="20dp"
         android:layout_gravity="bottom|end"
         android:clickable="true"
-        android:backgroundTint="@color/md_theme_light_primaryContainer"
         android:src="@drawable/bc_category_24" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -34,7 +33,6 @@
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
         android:clickable="true"
-        android:backgroundTint="@color/md_theme_light_primaryContainer"
         android:src="@drawable/baseline_add_circle_48" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

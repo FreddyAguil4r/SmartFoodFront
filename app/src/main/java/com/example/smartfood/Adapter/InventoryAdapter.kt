@@ -12,7 +12,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.ModelResponse.ProductResponse
 import com.example.smartfood.R
-import com.example.smartfood.Request.ProductRequest
 import com.example.smartfood.Request.UpdateProductRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

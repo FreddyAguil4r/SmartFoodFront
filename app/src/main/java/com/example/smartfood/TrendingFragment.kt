@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.Adapter.TrendingAdapter
@@ -35,7 +36,8 @@ class TrendingFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentTrendingBinding.inflate(inflater)
         recyclerView = binding.rcvAllCategories
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+
         adapter = TrendingAdapter(categoryList)
         recyclerView.adapter = adapter
 
@@ -71,11 +73,9 @@ class TrendingFragment : Fragment() {
         }
     }
 
-    //FUNCION PARA TRAER EL VALOR DEL INVENTARIO
     private fun searchInventory() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Hacer la llamada al servicio para obtener el inventario
                 val call = getRetrofit().create(APIServiceTrending::class.java)
                     .getInventory("inventory")
 
@@ -86,10 +86,7 @@ class TrendingFragment : Fragment() {
 
                     // Verificar que la respuesta no sea nula
                     if (inventoryResponse != null) {
-                        // Actualizar la propiedad totalInventory con el valor obtenido
                         totalInventory = inventoryResponse.totalInventory
-
-                        // Actualizar el TextView en el hilo principal
                         withContext(Dispatchers.Main) {
                             binding.txtTotalInventary.text = totalInventory.toString()
                         }
