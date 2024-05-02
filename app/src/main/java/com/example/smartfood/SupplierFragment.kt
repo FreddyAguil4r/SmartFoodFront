@@ -8,7 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.Adapter.SupplierAdapter
@@ -27,7 +30,8 @@ class SupplierFragment : Fragment() {
     private lateinit var binding: FragmentSupplierBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SupplierAdapter
-    private val supplierList = mutableListOf<SupplierResponse>()
+    private val supplierList = MutableLiveData<List<SupplierResponse>>()
+    private lateinit var searchView: SearchView
 
    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,10 +41,28 @@ class SupplierFragment : Fragment() {
 
        recyclerView = binding.rcyViewSupplier
        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-       adapter = SupplierAdapter(supplierList,::deleteSupplier,::updateSuppliers)
+       adapter = SupplierAdapter(emptyList(),::deleteSupplier,::updateSuppliers)
        recyclerView.adapter = adapter
 
+       supplierList.observe(viewLifecycleOwner) { suppliers ->
+           adapter.updateList(suppliers)
+       }
        searchAllSupplier()
+
+       searchView = binding.searchView
+       searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+           override fun onQueryTextSubmit(query: String?): Boolean {
+               return false
+           }
+           override fun onQueryTextChange(newText: String?): Boolean {
+               newText?.let {
+                   // Filtra la lista de proveedores basado en el texto ingresado
+                   adapter.filter.filter(it)
+               }
+               return false
+           }
+       })
+
        binding.floatingButton.setOnClickListener{addNewSupplierDialog()}
        return binding.root
    }
@@ -81,15 +103,12 @@ class SupplierFragment : Fragment() {
     private fun searchAllSupplier(){
         CoroutineScope(Dispatchers.IO).launch {
             val call = getRetrofit().create(APIServiceSupplier::class.java).getAllSuplier("supplier/all")
-            //Variable donde esta la respuesta
             val sup = call.body()
             withContext(Dispatchers.Main){
                 if(call.isSuccessful){
                     //?: En caso de que sea nulo, se asigna el valor de la derecha.
-                    val supliers = sup?: emptyList()
-                    supplierList.clear()
-                    supplierList.addAll(supliers)
-                    adapter.notifyDataSetChanged()
+                    val suppliers = sup?: emptyList()
+                    supplierList.postValue(suppliers)
                 }else{
                     showError()
                 }

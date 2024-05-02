@@ -6,13 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".SupplierFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Agrega un AppBarLayout para el Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Agrega un CollapsingToolbarLayout para el Toolbar -->
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Agrega un Toolbar con el SearchView -->
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"   >
+
+                <!-- Agrega el SearchView -->
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/searchView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:iconifiedByDefault="false"
+                    android:background="@drawable/search_view_bg"
+                    android:layout_marginEnd="10dp"
+                    android:queryHint="Buscar proveedores..." />
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- RecyclerView y FloatingActionButton como antes -->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcyViewSupplier"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_button"

@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.ModelResponse.SupplierResponse
@@ -15,11 +17,24 @@ import com.example.smartfood.Request.SupplierRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Locale
 
-class SupplierAdapter(private val suplierList: List<SupplierResponse>,
+class SupplierAdapter(private var suplierList: List<SupplierResponse>,
                       private val deleteSuppliers: (Int) -> Unit,
                       private val updateSuppliers: suspend (Int, SupplierRequest) -> Unit)
-    : RecyclerView.Adapter<SupplierAdapter.ViewHolder>() {
+    : RecyclerView.Adapter<SupplierAdapter.ViewHolder>(), Filterable {
+
+
+    var filteredSupplierList = mutableListOf<SupplierResponse>().apply {
+        addAll(suplierList)
+    }
+    fun updateList(newSuppliers: List<SupplierResponse>) {
+        this.suplierList = newSuppliers
+        this.filteredSupplierList.clear()
+        this.filteredSupplierList.addAll(newSuppliers)
+        notifyDataSetChanged()
+    }
+
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         var textTitle : TextView
@@ -33,6 +48,7 @@ class SupplierAdapter(private val suplierList: List<SupplierResponse>,
             textAddress = itemView.findViewById(R.id.text_supplier_address)
             editButton = itemView.findViewById(R.id.edit_button)
             deleteButton = itemView.findViewById(R.id.delete_button)
+            filteredSupplierList.addAll(suplierList)
         }
     }
 
@@ -42,7 +58,7 @@ class SupplierAdapter(private val suplierList: List<SupplierResponse>,
     }
 
     override fun onBindViewHolder(holder: SupplierAdapter.ViewHolder, position: Int) {
-        val sup = suplierList[position]
+        val sup = filteredSupplierList[position]
         holder.textTitle.text = sup.name
         holder.textRuc.text = "RUC: ${sup.ruc}"
         holder.textAddress.text = "Dirección: ${sup.address}"
@@ -90,6 +106,34 @@ class SupplierAdapter(private val suplierList: List<SupplierResponse>,
     }
 
     override fun getItemCount(): Int {
-        return suplierList.size
+        return filteredSupplierList.size
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                val filterResults = FilterResults()
+
+                // Si no hay búsqueda, devuelve la lista completa.
+                if (charSearch.isEmpty()) {
+                    filterResults.values = suplierList
+                } else {
+                    // Filtra por RUC.
+                    filterResults.values = suplierList.filter {
+                        it.ruc.toLowerCase(Locale.getDefault()).contains(charSearch.toLowerCase(Locale.getDefault()))
+                    }
+                }
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                results?.values?.let {
+                    @Suppress("UNCHECKED_CAST")
+                    filteredSupplierList = it as MutableList<SupplierResponse>
+                    notifyDataSetChanged()
+                }
+            }
+        }
     }
 }
