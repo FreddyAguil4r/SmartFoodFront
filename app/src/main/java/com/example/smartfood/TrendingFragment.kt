@@ -48,7 +48,7 @@ class TrendingFragment : Fragment() {
 
     private fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://smartfood-421500.uc.r.appspot.com/")
+            .baseUrl("http://26.54.240.231:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

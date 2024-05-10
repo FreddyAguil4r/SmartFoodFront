@@ -11,9 +11,9 @@ import com.example.smartfood.ModelResponse.CategoryResponseI
 
 import com.example.smartfood.R
 
-class CategoryAdapter(private val categoryList: List<CategoryResponseI>
-                     ,private val imageList: List<Int>) :
-    RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+class ItemContainerAdapter(private val categoryList: List<CategoryResponseI>
+                           , private val imageList: List<Int>) :
+    RecyclerView.Adapter<ItemContainerAdapter.CategoryViewHolder>() {
 
     inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val logoIv: ImageView = itemView.findViewById(R.id.parentLogoIv)
@@ -33,7 +33,7 @@ class CategoryAdapter(private val categoryList: List<CategoryResponseI>
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val parentItem = categoryList[position]
         holder.logoIv.setImageResource(imageList[position])
-        holder.titleTv.text = parentItem.name
+        holder.titleTv.text = parentItem.categoryName
 
         holder.childRecyclerView.setHasFixedSize(true)
         holder.childRecyclerView.layoutManager = GridLayoutManager(holder.itemView.context, 3)

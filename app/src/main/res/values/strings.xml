@@ -5,4 +5,5 @@
     <string name="title_update_product">Actualizar producto</string>
     <string name="channel_name">AVISO DE DESABASTECIMIENTO</string>
     <string name="channel_description">Notificación de bajos niveles de productos.</string>
+    <string name="title">Orden de compra</string>
 </resources>

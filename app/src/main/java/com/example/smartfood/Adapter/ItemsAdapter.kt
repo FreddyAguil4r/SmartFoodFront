@@ -7,11 +7,12 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.ModelResponse.ProductResponseI
+import com.example.smartfood.ModelResponse.ProductWithQuantityReponse
 import com.example.smartfood.R
 import com.google.android.material.card.MaterialCardView
 
 
-class ItemsAdapter(private val categoryList: List<ProductResponseI>)
+class ItemsAdapter(private val categoryList: List<ProductWithQuantityReponse>)
     :RecyclerView.Adapter<ItemsAdapter.ItemsViewHolder>() {
 
     inner class ItemsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -31,10 +32,10 @@ class ItemsAdapter(private val categoryList: List<ProductResponseI>)
     }
     override fun onBindViewHolder(holder: ItemsViewHolder, position: Int) {
         val cat = categoryList[position]
-        holder.title.text = categoryList[position].name
-        holder.textCantidad.text = cat.amount.toInt().toString()
+        holder.title.text = categoryList[position].productName
+        holder.textCantidad.text = cat.quantity.toInt().toString()
 
-        if (cat.amount.toInt() < 15) {
+        if (cat.quantity.toInt() < 15) {
             holder.cardView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.md_theme_light_onErrorContainer))
             holder.textCantidad.setTextColor(ContextCompat.getColor(holder.itemView.context,R.color.md_theme_light_tertiaryContainer))
         } else {

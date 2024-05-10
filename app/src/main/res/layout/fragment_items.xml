@@ -33,6 +33,6 @@
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
         android:clickable="true"
-        android:src="@drawable/baseline_add_circle_48" />
+        android:src="@drawable/circle_blank" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

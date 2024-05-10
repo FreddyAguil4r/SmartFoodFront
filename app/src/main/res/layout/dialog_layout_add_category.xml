@@ -38,8 +38,7 @@
             android:id="@+id/btn_add_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
-            android:backgroundTint="#50FBE4"
+            android:textColor="@color/md_theme_light_onPrimary"
             android:textSize="16sp"
             android:text="Guardar" />
 
@@ -47,8 +46,7 @@
             android:id="@+id/btn_cancel_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
-            android:backgroundTint="#50FBE4"
+            android:textColor="@color/md_theme_light_onPrimary"
             android:textSize="16sp"
             android:text="Cancelar" />
     </LinearLayout>

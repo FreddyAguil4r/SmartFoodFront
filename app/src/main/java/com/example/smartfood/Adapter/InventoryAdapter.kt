@@ -17,6 +17,7 @@ import com.example.smartfood.InventoryFragment
 import com.example.smartfood.ModelResponse.ProductResponse
 import com.example.smartfood.R
 import com.example.smartfood.Request.UpdateProductRequest
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,6 +31,8 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
         var textTitle: TextView
         var editButton: ImageButton
         var deleteButton: ImageButton
+        var addNewProductButton : Button
+        var removeProductButton : Button
         var textCantidad: TextView
         var textFecha: TextView
 
@@ -39,6 +42,8 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
             textFecha = itemView.findViewById(R.id.dateTextView)
             editButton = itemView.findViewById(R.id.edit_button)
             deleteButton = itemView.findViewById(R.id.delete_button)
+            addNewProductButton = itemView.findViewById(R.id.addProductButton)
+            removeProductButton = itemView.findViewById(R.id.removeProductButton)
         }
     }
 
@@ -106,6 +111,22 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
 
         if(sup.amount < 15){
             showLowQuantityNotification(holder.itemView.context, sup.name)
+        }
+
+        holder.addNewProductButton.setOnClickListener {
+            val context = holder.itemView.context
+            val dialogView: View = LayoutInflater.from(context).inflate(R.layout.dialog_layout_purchase_product,null)
+            //val builder = AlertDialog.Builder(context)
+            //builder.setView(dialogView)
+            //val alertDialog = builder.create()
+            //alertDialog.show()
+            MaterialAlertDialogBuilder(context)
+                .setTitle(context.getString(R.string.title))
+                .setView(dialogView)
+                .show()
+        }
+        holder.removeProductButton.setOnClickListener {
+
         }
 
     }

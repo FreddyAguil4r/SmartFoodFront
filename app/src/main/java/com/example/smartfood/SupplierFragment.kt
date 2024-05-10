@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.MutableLiveData
@@ -94,9 +93,9 @@ class SupplierFragment : Fragment() {
         // Muestra el AlertDialog
         alertDialog.show()
     }
-    private fun getRetrofit():Retrofit{
+    private fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://smartfood-421500.uc.r.appspot.com/")
+            .baseUrl("http://26.54.240.231:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

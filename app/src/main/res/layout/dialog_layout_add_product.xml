@@ -17,7 +17,7 @@
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/textTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
@@ -34,30 +34,6 @@
                 android:layout_marginBottom="20dp"
                 android:hint="Nombre" />
 
-
-            <EditText
-                android:id="@+id/edtDueDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:focusable="false"
-                android:inputType="none"
-                android:hint="Fecha de compra" />
-
-            <EditText
-                android:id="@+id/edtUnitCost"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:hint="Costo unitario" />
-
-            <EditText
-                android:id="@+id/edtAmount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="25dp"
-                android:hint="Cantidad" />
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/spinner_category"
                 android:layout_width="match_parent"
@@ -71,7 +47,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/spinner_supplier"
+                android:id="@+id/spinner_unit"
                 android:layout_width="match_parent"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:padding="10dp"
@@ -81,7 +57,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,18 +68,18 @@
                     android:id="@+id/btnSave"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/md_theme_light_onPrimaryContainer"
-                    android:backgroundTint="#50FBE4"
-                    android:textSize="16sp"
                     android:layout_marginBottom="10dp"
-                    android:text="Guardar" />
+                    android:text="Guardar"
+                    android:textColor="@color/md_theme_light_onPrimary"
+                    android:backgroundTint="@color/md_theme_light_primary"
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/btnCancel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/md_theme_light_onPrimaryContainer"
-                    android:backgroundTint="#50FBE4"
+                    android:textColor="@color/md_theme_light_onPrimary"
+                    android:backgroundTint="@color/md_theme_light_primary"
                     android:textSize="16sp"
                     android:text="Cancelar"
                     />
