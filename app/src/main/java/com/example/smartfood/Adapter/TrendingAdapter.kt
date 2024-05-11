@@ -9,7 +9,8 @@ import com.example.smartfood.ModelResponse.CategoryResponse
 import com.example.smartfood.R
 
 
-class TrendingAdapter(private val suplierList: List<CategoryResponse>): RecyclerView.Adapter<TrendingAdapter.ViewHolder>() {
+class TrendingAdapter(private val suplierList: List<CategoryResponse>):
+    RecyclerView.Adapter<TrendingAdapter.ViewHolder>() {
 
     //representa identidad indivual
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){

@@ -50,13 +50,11 @@
             android:id="@+id/dateTextView"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:text="Fecha de compra"
             android:textColor="@color/md_theme_light_onPrimaryContainer"
             android:textSize="16sp"
             android:layout_marginStart="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/quantityTextView"
-            app:layout_constraintBottom_toTopOf="@+id/addProductButton"/>
+            app:layout_constraintTop_toBottomOf="@+id/quantityTextView"/>
 
         <LinearLayout
             android:id="@+id/buttonsLayout"

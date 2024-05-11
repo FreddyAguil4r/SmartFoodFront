@@ -3,9 +3,13 @@ package com.example.smartfood.Adapter
 import android.app.AlertDialog
 import android.content.Context
 import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -15,34 +19,45 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.InventoryFragment
 import com.example.smartfood.ModelResponse.ProductResponse
+import com.example.smartfood.ModelResponse.SupplierResponse
+import com.example.smartfood.ModelResponse.UnitResponse
 import com.example.smartfood.R
+import com.example.smartfood.Request.ProductRequest
+import com.example.smartfood.Request.PurchaseRequest
 import com.example.smartfood.Request.UpdateProductRequest
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class InventoryAdapter(private val productList: List<ProductResponse>,
                        private val deleteProducts: (Int) -> Unit,
-                       private val updateProducts : suspend (Int, UpdateProductRequest) -> Unit)
-    :RecyclerView.Adapter<InventoryAdapter.ViewHolder>() {
+                       private val updateProducts : suspend (Int, UpdateProductRequest) -> Unit,
+                       private val makePurchase : (PurchaseRequest) -> Unit,
+                       private val dataSpinnerSupplier : List<String>,
+                       private val supplierList: List<SupplierResponse>,
+                       private val dataSpinnerUnits : List<String>,
+                       private val unitList: List<UnitResponse>
+):RecyclerView.Adapter<InventoryAdapter.ViewHolder>() {
 
+    private var idSupplier=0
+    private var idUnit=0
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textTitle: TextView
         var editButton: ImageButton
         var deleteButton: ImageButton
-        var addNewProductButton : Button
+        var purchaseProductButton : Button
         var removeProductButton : Button
         var textCantidad: TextView
         var textFecha: TextView
-
         init {
             textTitle = itemView.findViewById(R.id.item_product)
             textCantidad = itemView.findViewById(R.id.quantityTextView)
             textFecha = itemView.findViewById(R.id.dateTextView)
             editButton = itemView.findViewById(R.id.edit_button)
             deleteButton = itemView.findViewById(R.id.delete_button)
-            addNewProductButton = itemView.findViewById(R.id.addProductButton)
+            purchaseProductButton = itemView.findViewById(R.id.addProductButton)
             removeProductButton = itemView.findViewById(R.id.removeProductButton)
         }
     }
@@ -59,12 +74,12 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val sup = productList[position]
-        holder.textTitle.text = sup.name
-        holder.textCantidad.text = "Cantidad: ${sup.amount.toInt()}"
-        holder.textFecha.text = "Fecha de compra: ${sup.datePurchase.toString()}"
+        holder.textTitle.text = sup.productName
+        holder.textCantidad.text = "Cantidad: ${sup.quantity.toString()}"
+
 
         holder.deleteButton.setOnClickListener {
-            deleteProducts(sup.id)
+            deleteProducts(sup.productId)
         }
         holder.editButton.setOnClickListener {
             val context = holder.itemView.context
@@ -77,29 +92,15 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
             val alertDialog = builder.create()
             val saveButton = dialogView.findViewById<Button>(R.id.btnSaveUpdate)
             val cancelButton = dialogView.findViewById<Button>(R.id.btnCancelUpdate)
-
             val newNameEditText = dialogView.findViewById<EditText>(R.id.editNewTextNombre)
-            val newUnitCostEditText = dialogView.findViewById<EditText>(R.id.editNewTextUnitCost)
-            val newAmountEditText = dialogView.findViewById<EditText>(R.id.editNewTextAmount)
+            newNameEditText.text = Editable.Factory.getInstance().newEditable(sup.productName)
 
-            newNameEditText.text = Editable.Factory.getInstance().newEditable(sup.name)
-            newUnitCostEditText.text =
-                Editable.Factory.getInstance().newEditable(sup.unitCost.toString())
-
-            val amountWithoutDecimal = String.format("%.0f", sup.amount)
-            newAmountEditText.text = Editable.Factory.getInstance().newEditable(amountWithoutDecimal)
 
             saveButton.setOnClickListener {
                 val newName = newNameEditText.text.toString()
-                val newUnitCost = newUnitCostEditText.text.toString().toDouble()
-                val newAmount = newAmountEditText.text.toString().toDouble()
-                val updatedProduct = UpdateProductRequest(
-                    newName,
-                    newUnitCost,
-                    newAmount,
-                )
+                val updatedProduct = UpdateProductRequest(newName)
                 CoroutineScope(Dispatchers.Main).launch {
-                    updateProducts(sup.id, updatedProduct)
+                    updateProducts(sup.productId, updatedProduct)
                     alertDialog.dismiss()
                 }
             }
@@ -109,26 +110,61 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
             alertDialog.show()
         }
 
-        if(sup.amount < 15){
-            showLowQuantityNotification(holder.itemView.context, sup.name)
-        }
-
-        holder.addNewProductButton.setOnClickListener {
+        holder.purchaseProductButton.setOnClickListener {
             val context = holder.itemView.context
             val dialogView: View = LayoutInflater.from(context).inflate(R.layout.dialog_layout_purchase_product,null)
-            //val builder = AlertDialog.Builder(context)
-            //builder.setView(dialogView)
-            //val alertDialog = builder.create()
-            //alertDialog.show()
-            MaterialAlertDialogBuilder(context)
+
+            val spinnnerSuplier : TextInputLayout = dialogView.findViewById(R.id.supplierSpinner)
+            val spinnnerUnit : TextInputLayout = dialogView.findViewById(R.id.unitSpinner)
+            val adapterSpSuplier = ArrayAdapter(context,android.R.layout.simple_spinner_item,dataSpinnerSupplier)
+            val adapterSpUnits = ArrayAdapter(context,android.R.layout.simple_spinner_item,dataSpinnerUnits)
+            (spinnnerSuplier.editText as AutoCompleteTextView).setAdapter(adapterSpSuplier)
+            (spinnnerUnit.editText as AutoCompleteTextView).setAdapter(adapterSpUnits)
+
+            (spinnnerSuplier.editText as AutoCompleteTextView).onItemClickListener=
+                AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                val selec=adapterView.getItemAtPosition(i)
+                val idCapturado=supplierList.filter { it.name==selec }[0].id
+                idSupplier=idCapturado
+                Log.i("ITEMSEL","$idCapturado")
+            }
+
+            (spinnnerUnit.editText as AutoCompleteTextView).onItemClickListener=
+                AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                    val selec=adapterView.getItemAtPosition(i)
+                    val idCapturado=unitList.filter { it.name==selec }[0].id
+                    idUnit=idCapturado
+                    Log.i("ITEMSEL","$idCapturado")
+                }
+
+            val alertDialog = MaterialAlertDialogBuilder(context)
                 .setTitle(context.getString(R.string.title))
                 .setView(dialogView)
-                .show()
+                .create()
+
+            val cancelButton: Button = dialogView.findViewById(R.id.cancelButton)
+            val addPurchaseButton: Button = dialogView.findViewById(R.id.addButton)
+
+            addPurchaseButton.setOnClickListener {
+                val amountEditText = dialogView.findViewById<EditText>(R.id.amountEditText)
+                val unitCostEditText = dialogView.findViewById<EditText>(R.id.unitCostEditText)
+                val amount = amountEditText.text.toString().toInt()
+                val unitCost = unitCostEditText.text.toString().toDouble()
+
+                val purchaseRequest = PurchaseRequest(amount,unitCost,sup.productId,idSupplier,idUnit)
+                makePurchase(purchaseRequest)
+                alertDialog.dismiss()
+            }
+
+            cancelButton.setOnClickListener {
+                alertDialog.dismiss()
+            }
+
+            alertDialog.show()
         }
         holder.removeProductButton.setOnClickListener {
 
         }
-
     }
 
     private fun showLowQuantityNotification(context: Context, productName: String) {

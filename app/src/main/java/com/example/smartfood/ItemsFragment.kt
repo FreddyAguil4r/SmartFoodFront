@@ -111,7 +111,7 @@ class ItemsFragment : Fragment() {
 
         (spinnerSupplier.editText as AutoCompleteTextView).onItemClickListener=AdapterView.OnItemClickListener { adapterView, view, i, l ->
             val selec=adapterView.getItemAtPosition(i)
-            val idCapturado=unitList.filter { it.abbrevation==selec }[0].id
+            val idCapturado=unitList.filter { it.name==selec }[0].id
             idUnit=idCapturado
 
             Log.i("ITEMSEL","$selec")
@@ -123,10 +123,6 @@ class ItemsFragment : Fragment() {
 
         saveNewProductButton.setOnClickListener {
             val nombre = dialogView.findViewById<EditText>(R.id.edtName).text.toString()
-           //val costo_unitarioStr = dialogView.findViewById<EditText>(R.id.edtUnitCost).text.toString()
-           //val cantidadStr = dialogView.findViewById<EditText>(R.id.edtAmount).text.toString()
-           //val costo_unitario = costo_unitarioStr.toDoubleOrNull() ?: 0.0
-           //val cantidad = cantidadStr.toDoubleOrNull() ?: 0.0
             val productRequest = ProductRequest(nombre, idCategory, idUnit)
             addProduct(productRequest)
             alertDialog.dismiss()
@@ -253,7 +249,6 @@ class ItemsFragment : Fragment() {
             }
             progressDialog.show()
 
-            // Oculta el diálogo después de un tiempo determinado o cuando se complete la carga
             CoroutineScope(Dispatchers.IO).launch {
                 delay(2000) // Espera antes de ocultar el diálogo
                 withContext(Dispatchers.Main) {

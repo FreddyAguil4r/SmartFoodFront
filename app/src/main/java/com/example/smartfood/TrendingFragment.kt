@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.Adapter.TrendingAdapter
 import com.example.smartfood.ModelResponse.CategoryResponse
 import com.example.smartfood.ModelResponse.InventoryResponse
+import com.example.smartfood.ModelResponse.ProductResponse
 import com.example.smartfood.Service.APIServiceCategory
+import com.example.smartfood.Service.APIServiceProduct
 import com.example.smartfood.Service.APIServiceTrending
 import com.example.smartfood.databinding.FragmentTrendingBinding
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +29,7 @@ class TrendingFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: TrendingAdapter
     private val categoryList = mutableListOf<CategoryResponse>()
-    var totalInventory: Double = 0.0
+    private val productList = mutableListOf<ProductResponse>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +68,7 @@ class TrendingFragment : Fragment() {
                     categoryList.clear()
                     categoryList.addAll(categories)
                     adapter.notifyDataSetChanged()
+
                 } else {
                     showError()
                 }
@@ -75,31 +78,21 @@ class TrendingFragment : Fragment() {
 
     private fun searchInventory() {
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val call = getRetrofit().create(APIServiceTrending::class.java)
-                    .getInventory("inventory")
+            val call = getRetrofit().create(APIServiceProduct::class.java).getAllProducts("product/quantity")
+            val sup = call.body()
 
-                // Verificar si la llamada fue exitosa
-                if (call.isSuccessful) {
-                    // Obtener la respuesta del cuerpo de la llamada
-                    val inventoryResponse: InventoryResponse? = call.body()
+            withContext(Dispatchers.Main){
+                if(call.isSuccessful){
+                    val products = sup?: emptyList()
+                    productList.clear()
+                    productList.addAll(products)
+                    adapter.notifyDataSetChanged()
+                    // Calcula el total del inventario
+                    val totalInventario = productList.sumOf { it.totalInventory }
 
-                    // Verificar que la respuesta no sea nula
-                    if (inventoryResponse != null) {
-                        totalInventory = inventoryResponse.totalInventory
-                        withContext(Dispatchers.Main) {
-                            binding.txtTotalInventary.text = totalInventory.toString()
-                        }
-                    }
-                } else {
-                    // Manejar el caso en que la llamada no fue exitosa
-                    withContext(Dispatchers.Main) {
-                        showError()
-                    }
-                }
-            } catch (e: Exception) {
-                // Manejar excepciones, por ejemplo, conexión fallida
-                withContext(Dispatchers.Main) {
+                    // Actualiza el TextView con el total del inventario
+                    binding.txtTotalInventary.text = getString(R.string.total_inventory_format, totalInventario)
+                }else{
                     showError()
                 }
             }

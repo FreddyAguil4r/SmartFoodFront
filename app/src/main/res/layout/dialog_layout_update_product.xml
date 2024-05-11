@@ -32,23 +32,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"/>
 
-        <!-- PlainText para ingresar RUC -->
-        <EditText
-            android:id="@+id/editNewTextUnitCost"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            />
-
-        <!-- PlainText para ingresar dirección -->
-        <EditText
-            android:id="@+id/editNewTextAmount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:layout_marginBottom="20dp"
-            />
-
         <!-- Layout para los botones Cancel y Save con espacio adicional -->
         <LinearLayout
             android:layout_width="match_parent"
