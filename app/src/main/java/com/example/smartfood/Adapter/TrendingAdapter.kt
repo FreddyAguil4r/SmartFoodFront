@@ -34,8 +34,6 @@ class TrendingAdapter(private val suplierList: List<CategoryResponse>):
     override fun onBindViewHolder(holder: TrendingAdapter.ViewHolder, position: Int) {
         val sup = suplierList[position]
         holder.textTitle.text = sup.name
-        //Redondear a dos digitos.  holder.textValue.text = sup.totalValuesCategories.toString()
-        val roundedValue = String.format("%.2f", sup.totalValuesCategories)
-        holder.textValue.text = roundedValue.toString()
+
     }
 }

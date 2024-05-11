@@ -16,7 +16,6 @@ import com.example.smartfood.Adapter.InventoryAdapter
 import com.example.smartfood.ModelResponse.ProductResponse
 import com.example.smartfood.ModelResponse.SupplierResponse
 import com.example.smartfood.ModelResponse.UnitResponse
-import com.example.smartfood.Request.ProductRequest
 import com.example.smartfood.Request.PurchaseRequest
 import com.example.smartfood.Request.UpdateProductRequest
 import com.example.smartfood.Service.APIServiceProduct
@@ -39,6 +38,7 @@ class InventoryFragment : Fragment() {
     private val productList = mutableListOf<ProductResponse>()
     private val supplierList = mutableListOf<SupplierResponse>()
     private val unitList = mutableListOf<UnitResponse>()
+
     private val dataSpinnerSupplier = mutableListOf<String>()
     private val dataSpinnerUnits = mutableListOf<String>()
 
@@ -70,7 +70,7 @@ class InventoryFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             val call = getRetrofit().create(APIServiceProduct::class.java).getAllProducts("product/quantity")
             val sup = call.body()
-            //Variable donde esta la respuesta
+
             withContext(Dispatchers.Main){
                 if(call.isSuccessful){
                     val products = sup?: emptyList()
@@ -156,6 +156,7 @@ class InventoryFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 if (call.isSuccessful) {
                     showSuccessful()
+                    searchAllProducts()
                 } else {
                     showError()
                 }

@@ -46,8 +46,8 @@ class ItemsFragment : Fragment() {
     private var idUnit=0
 
     val imageList = listOf(
-        R.drawable.carne,
         R.drawable.verduras,
+        R.drawable.carne,
         R.drawable.cereal,
         R.drawable.suministros,
     )
@@ -63,7 +63,6 @@ class ItemsFragment : Fragment() {
         binding.rcyView.adapter = adapter
 
         searchAllCategoriesWithProduct()
-
         binding.fabAddCategory.setOnClickListener { openDialogAddNewCategory() }
         binding.floatingButton.setOnClickListener { openDialogAddNewProduct() }
         return binding.root
@@ -219,7 +218,12 @@ class ItemsFragment : Fragment() {
                     if (call.isSuccessful) {
                         val categories = sup ?: emptyList()
                         categoryListI.clear()
-                        categoryListI.addAll(categories)
+                        categories.forEach { category ->
+                            // Verifica si la categoría tiene productos antes de agregarla
+                            if (category.products.isNotEmpty()) {
+                                categoryListI.add(category)
+                            }
+                        }
                         adapter.notifyDataSetChanged()
                     } else {
                         showError(10)
@@ -239,7 +243,8 @@ class ItemsFragment : Fragment() {
     }
     private fun showError(retryCount: Int) {
         if (retryCount >= 3) {
-            Toast.makeText(requireContext(), "Error de conexión. Por favor, verifica tu conexión a internet.", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Existe una categoría sin asignar productos", Toast.LENGTH_LONG).show()
+            searchAllCategories()
         } else {
             // Muestra un diálogo de progreso aquí
             val progressDialog = ProgressDialog(requireContext()).apply {

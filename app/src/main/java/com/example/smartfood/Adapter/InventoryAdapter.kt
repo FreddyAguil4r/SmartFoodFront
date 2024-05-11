@@ -50,11 +50,9 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
         var purchaseProductButton : Button
         var removeProductButton : Button
         var textCantidad: TextView
-        var textFecha: TextView
         init {
             textTitle = itemView.findViewById(R.id.item_product)
             textCantidad = itemView.findViewById(R.id.quantityTextView)
-            textFecha = itemView.findViewById(R.id.dateTextView)
             editButton = itemView.findViewById(R.id.edit_button)
             deleteButton = itemView.findViewById(R.id.delete_button)
             purchaseProductButton = itemView.findViewById(R.id.addProductButton)
@@ -81,12 +79,12 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
         holder.deleteButton.setOnClickListener {
             deleteProducts(sup.productId)
         }
+
         holder.editButton.setOnClickListener {
             val context = holder.itemView.context
             val dialogView =
                 LayoutInflater.from(context).inflate(R.layout.dialog_layout_update_product, null)
 
-            // Configura el diálogo con un constructor de AlertDialog
             val builder = AlertDialog.Builder(context)
             builder.setView(dialogView)
             val alertDialog = builder.create()

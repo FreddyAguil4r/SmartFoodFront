@@ -21,40 +21,31 @@
             android:id="@+id/item_product"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:text="Zanahoria"
             android:textColor="@color/md_theme_light_onPrimaryContainer"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="6dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonsLayout"
-            app:layout_constraintBottom_toTopOf="@+id/quantityTextView"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/quantityTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:text="Cantidad"
+            android:paddingBottom="10dp"
             android:textColor="@color/md_theme_light_onPrimaryContainer"
             android:textSize="16sp"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonsLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/item_product"
-            app:layout_constraintEnd_toStartOf="@+id/buttonsLayout"
-            app:layout_constraintBottom_toTopOf="@+id/dateTextView"/>
+            app:layout_constraintVertical_bias="0.13999999" />
 
-        <TextView
-            android:id="@+id/dateTextView"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
-            android:textSize="16sp"
-            android:layout_marginStart="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/quantityTextView"/>
+        <!-- Se ha eliminado el TextView dateTextView -->
 
         <LinearLayout
             android:id="@+id/buttonsLayout"
@@ -65,7 +56,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.39">
+            app:layout_constraintVertical_bias="0.37">
 
             <ImageButton
                 android:id="@+id/edit_button"
@@ -91,11 +82,10 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dateTextView">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/quantityTextView">
 
             <Button
                 android:id="@+id/addProductButton"
