@@ -87,7 +87,7 @@ class InventoryFragment : Fragment() {
 
     private fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://26.54.240.231:8080/")
+            .baseUrl("https://smartfood-421500.uc.r.appspot.com")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

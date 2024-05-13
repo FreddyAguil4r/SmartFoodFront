@@ -32,12 +32,21 @@ class ItemContainerAdapter(private val categoryList: List<CategoryResponseI>
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val parentItem = categoryList[position]
-        holder.logoIv.setImageResource(imageList[position])
+        if (imageList.size > position) {
+            holder.logoIv.setImageResource(imageList[position])
+        }else {
+            holder.logoIv.setImageResource(R.drawable.df)
+        }
         holder.titleTv.text = parentItem.categoryName
 
-        holder.childRecyclerView.setHasFixedSize(true)
-        holder.childRecyclerView.layoutManager = GridLayoutManager(holder.itemView.context, 3)
-        val adapter = ItemsAdapter(parentItem.products)
-        holder.childRecyclerView.adapter = adapter
+        if (parentItem.products?.isNotEmpty() == true) {
+            holder.childRecyclerView.visibility = View.VISIBLE
+            holder.childRecyclerView.setHasFixedSize(true)
+            holder.childRecyclerView.layoutManager = GridLayoutManager(holder.itemView.context, 3)
+            val adapter = ItemsAdapter(parentItem.products)
+            holder.childRecyclerView.adapter = adapter
+        } else {
+            holder.childRecyclerView.visibility = View.GONE
+        }
     }
 }

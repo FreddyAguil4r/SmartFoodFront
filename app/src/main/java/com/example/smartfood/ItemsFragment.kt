@@ -50,6 +50,9 @@ class ItemsFragment : Fragment() {
         R.drawable.carne,
         R.drawable.cereal,
         R.drawable.suministros,
+        R.drawable.fruta,
+        R.drawable.pescado,
+        R.drawable.df,
     )
 
     override fun onCreateView(
@@ -84,7 +87,6 @@ class ItemsFragment : Fragment() {
         dialogView.findViewById<Button>(R.id.btn_cancel_category).setOnClickListener {
             alertDialog.dismiss()
         }
-
         alertDialog.show()
     }
     private fun openDialogAddNewProduct() {
@@ -126,28 +128,25 @@ class ItemsFragment : Fragment() {
             addProduct(productRequest)
             alertDialog.dismiss()
         }
-
         cancelButton.setOnClickListener {
             alertDialog.dismiss()
         }
-
         alertDialog.show()
     }
-
     private fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://26.54.240.231:8080")
+            .baseUrl("https://smartfood-421500.uc.r.appspot.com")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-
     private fun addCategory(categoryRequest: CategoryRequest) {
         CoroutineScope(Dispatchers.IO).launch {
             val call =
                 getRetrofit().create(APIServiceCategory::class.java).addCategory(categoryRequest)
             withContext(Dispatchers.Main) {
                 if (call.isSuccessful) {
-                    searchAllCategories()
+                    searchAllCategoriesWithProduct()
+                    Toast.makeText(requireContext(), "Su categoría fue agregada exitosamente.", Toast.LENGTH_LONG).show()
                 } else {
                     showError(10)
                 }
@@ -161,6 +160,7 @@ class ItemsFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 if (call.isSuccessful) {
                     searchAllCategoriesWithProduct()
+                    Toast.makeText(requireContext(), "Se agrego su producto exitosamente.", Toast.LENGTH_LONG).show()
                 } else {
                     showError(10)
                 }
@@ -178,8 +178,6 @@ class ItemsFragment : Fragment() {
                     val categories = sup ?: emptyList()
                     categoryList.clear()
                     categoryList.addAll(categories)
-                    adapter.notifyDataSetChanged()
-
                     dataSpinnerCategory.clear()
                     dataSpinnerCategory.addAll(categories.map { it.name })
                 } else {
@@ -198,8 +196,6 @@ class ItemsFragment : Fragment() {
                     val units = sup ?: emptyList()
                     unitList.clear()
                     unitList.addAll(units)
-                    adapter.notifyDataSetChanged()
-
                     dataSpinnerUnits.clear()
                     dataSpinnerUnits.addAll(unitList.map { it.name })
                 } else {
@@ -218,20 +214,15 @@ class ItemsFragment : Fragment() {
                     if (call.isSuccessful) {
                         val categories = sup ?: emptyList()
                         categoryListI.clear()
-                        categories.forEach { category ->
-                            // Verifica si la categoría tiene productos antes de agregarla
-                            if (category.products.isNotEmpty()) {
-                                categoryListI.add(category)
-                            }
-                        }
+                        categoryListI.addAll(categories)
                         adapter.notifyDataSetChanged()
                     } else {
                         showError(10)
                     }
                 }
             } catch (e: Exception) {
-                if (retryCount < 3) { // Número de reintentos
-                    delay(2000) // Tiempo de espera antes de reintento, en milisegundos
+                if (retryCount < 3) {
+                    delay(2000)
                     searchAllCategoriesWithProduct(retryCount + 1)
                 } else {
                     withContext(Dispatchers.Main) {
@@ -243,7 +234,7 @@ class ItemsFragment : Fragment() {
     }
     private fun showError(retryCount: Int) {
         if (retryCount >= 3) {
-            Toast.makeText(requireContext(), "Existe una categoría sin asignar productos", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Error en la conexión revise su red.", Toast.LENGTH_LONG).show()
             searchAllCategories()
         } else {
             // Muestra un diálogo de progreso aquí
