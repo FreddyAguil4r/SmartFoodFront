@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.Adapter.InventoryAdapter
@@ -17,6 +19,7 @@ import com.example.smartfood.ModelResponse.ProductResponse
 import com.example.smartfood.ModelResponse.SupplierResponse
 import com.example.smartfood.ModelResponse.UnitResponse
 import com.example.smartfood.Request.PurchaseRequest
+import com.example.smartfood.Request.SubstractProductRequest
 import com.example.smartfood.Request.UpdateProductRequest
 import com.example.smartfood.Service.APIServiceProduct
 import com.example.smartfood.Service.APIServicePurchase
@@ -34,13 +37,13 @@ class InventoryFragment : Fragment() {
     private lateinit var binding: FragmentInventoryBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: InventoryAdapter
+    private val productList =  MutableLiveData<List<ProductResponse>>()
 
-    private val productList = mutableListOf<ProductResponse>()
     private val supplierList = mutableListOf<SupplierResponse>()
     private val unitList = mutableListOf<UnitResponse>()
-
     private val dataSpinnerSupplier = mutableListOf<String>()
     private val dataSpinnerUnits = mutableListOf<String>()
+    private lateinit var searchView: SearchView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,13 +53,31 @@ class InventoryFragment : Fragment() {
         createNotificationChannel()
         recyclerView = binding.inventoryrcv
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = InventoryAdapter(productList,::deleteProducts,::updateProducts,
-            ::makePurchase,dataSpinnerSupplier,supplierList,dataSpinnerUnits,unitList)
+        adapter = InventoryAdapter(emptyList(),::deleteProducts,::updateProducts,
+            ::makePurchase,::substractPurchase,dataSpinnerSupplier,supplierList,dataSpinnerUnits,unitList)
         recyclerView.adapter = adapter
+
+        productList.observe(viewLifecycleOwner){products ->
+            adapter.updateList(products)
+        }
 
         searchAllProducts()
         searchAllSupplier()
         searchAllUnits()
+
+        searchView = binding.searchViewInventory
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let {
+                    adapter.filter.filter(it)
+                }
+                return false
+            }
+        })
+
         return binding.root
     }
 
@@ -74,9 +95,7 @@ class InventoryFragment : Fragment() {
             withContext(Dispatchers.Main){
                 if(call.isSuccessful){
                     val products = sup?: emptyList()
-                    productList.clear()
-                    productList.addAll(products)
-                    adapter.notifyDataSetChanged()
+                    productList.postValue(products)
                 }else{
                     showError()
                 }
@@ -163,6 +182,23 @@ class InventoryFragment : Fragment() {
             }
         }
     }
+
+    private fun substractPurchase(substractRequest: SubstractProductRequest){
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val apiService = getRetrofit().create(APIServiceProduct::class.java)
+                val response = apiService.substractProduct(substractRequest)
+                if (response.isSuccessful) {
+                    showSuccessful()
+                } else {
+                    showError()
+                }
+            } catch (e: Exception) {
+                showError()
+            }
+        }
+    }
+
     private fun showSuccessful(){
         Toast.makeText(requireContext(),"Se añadio la compra exitosamente", Toast.LENGTH_SHORT).show()
     }

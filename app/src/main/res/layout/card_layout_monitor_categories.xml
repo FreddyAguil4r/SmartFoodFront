@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_supplier"
     android:layout_margin="15dp"
-    app:cardBackgroundColor="@color/md_theme_light_tertiaryContainer"
+    app:cardBackgroundColor="@color/md_theme_light_inverseSurface"
     app:cardCornerRadius="20dp"
     app:cardElevation="10dp"
     app:contentPadding="15dp">
@@ -20,7 +20,7 @@
             android:id="@+id/item_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
+            android:textColor="@color/md_theme_light_inverseOnSurface"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_alignParentTop="true"/>
@@ -29,7 +29,7 @@
             android:id="@+id/tvValue_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
+            android:textColor="@color/md_theme_light_inverseOnSurface"
             android:textSize="20sp"
             android:layout_below="@id/item_category"/>
     </RelativeLayout>

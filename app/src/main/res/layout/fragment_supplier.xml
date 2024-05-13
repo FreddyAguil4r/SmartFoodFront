@@ -53,6 +53,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
+        android:background="@color/md_theme_light_primaryContainer"
         android:clickable="true"
         android:src="@drawable/circle_blank" />
 

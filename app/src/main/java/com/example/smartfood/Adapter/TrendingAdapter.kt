@@ -5,14 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.smartfood.ModelResponse.CategoryResponse
+import com.example.smartfood.ModelResponse.CategoryTotal
 import com.example.smartfood.R
 
 
-class TrendingAdapter(private val suplierList: List<CategoryResponse>):
+class TrendingAdapter(private val categoryList: List<CategoryTotal>):
     RecyclerView.Adapter<TrendingAdapter.ViewHolder>() {
 
-    //representa identidad indivual
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         var textTitle : TextView
         var textValue : TextView
@@ -28,12 +27,13 @@ class TrendingAdapter(private val suplierList: List<CategoryResponse>):
     }
 
     override fun getItemCount(): Int {
-        return suplierList.size
+        return categoryList.size
     }
 
     override fun onBindViewHolder(holder: TrendingAdapter.ViewHolder, position: Int) {
-        val sup = suplierList[position]
+        val sup = categoryList[position]
         holder.textTitle.text = sup.name
-
+        holder.textValue.text = sup.totalCategory.toString()
     }
+
 }

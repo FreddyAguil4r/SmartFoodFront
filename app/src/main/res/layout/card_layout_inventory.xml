@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="12dp"
-    app:cardBackgroundColor="@color/md_theme_light_tertiaryContainer"
+    app:cardBackgroundColor="@color/md_theme_light_inverseSurface"
     app:cardCornerRadius="20dp"
     app:cardElevation="6dp"
     app:contentPadding="4dp">
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="Zanahoria"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
+            android:textColor="@color/md_theme_light_inverseOnSurface"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/buttonsLayout"
@@ -37,7 +37,7 @@
             android:layout_marginStart="10dp"
             android:text="Cantidad"
             android:paddingBottom="10dp"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
+            android:textColor="@color/md_theme_light_inverseOnSurface"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonsLayout"
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="30dp"
-                android:background="@android:color/transparent"
+                android:background="@color/md_theme_light_tertiaryContainer"
                 android:contentDescription="Edit"
                 android:src="@drawable/baseline_edit_24" />
 
@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:background="@android:color/transparent"
+                android:background="@color/md_theme_light_tertiaryContainer"
                 android:contentDescription="Trash"
                 android:src="@drawable/baseline_restore_from_trash_24" />
         </LinearLayout>
@@ -91,14 +91,24 @@
                 android:id="@+id/addProductButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add" />
+                android:textColor="@color/md_theme_light_onPrimary"
+                android:text="Agregar" />
 
             <Button
                 android:id="@+id/removeProductButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="Remove" />
+                android:text="Quitar"
+                android:textColor="@color/md_theme_light_onPrimary" />
+
+            <EditText
+                android:id="@+id/editTextSubstract"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="10dp"
+                android:inputType="number" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

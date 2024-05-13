@@ -7,14 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.Adapter.TrendingAdapter
-import com.example.smartfood.ModelResponse.CategoryResponse
-import com.example.smartfood.ModelResponse.InventoryResponse
-import com.example.smartfood.ModelResponse.ProductResponse
-import com.example.smartfood.Service.APIServiceCategory
-import com.example.smartfood.Service.APIServiceProduct
+import com.example.smartfood.ModelResponse.CategoryTotal
+import com.example.smartfood.ModelResponse.MonitorResponse
 import com.example.smartfood.Service.APIServiceTrending
 import com.example.smartfood.databinding.FragmentTrendingBinding
 import kotlinx.coroutines.CoroutineScope
@@ -28,23 +24,20 @@ class TrendingFragment : Fragment() {
     private lateinit var binding: FragmentTrendingBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: TrendingAdapter
-    private val categoryList = mutableListOf<CategoryResponse>()
-    private val productList = mutableListOf<ProductResponse>()
+    private lateinit var monitorResponse: MonitorResponse
+    private var categoryList = mutableListOf<CategoryTotal>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentTrendingBinding.inflate(inflater)
         recyclerView = binding.rcvAllCategories
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-
+        TotalValuesMonitor()
         adapter = TrendingAdapter(categoryList)
         recyclerView.adapter = adapter
 
-        searchInventory()
-        searchAllCategories()
         return binding.root
     }
 
@@ -55,44 +48,18 @@ class TrendingFragment : Fragment() {
             .build()
     }
 
-    //FUNCION PARA LISTAR TODAS LAS CATEGORIAS
-    private fun searchAllCategories() {
+    private fun TotalValuesMonitor() {
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIServiceCategory::class.java)
-                .getAllCategories("category/all")
-            val sup = call.body()
-            //Variable donde esta la respuesta
+            val call = getRetrofit().create(APIServiceTrending::class.java).getTotalMonitor("category/quantity")
+            val response = call.body()
+
             withContext(Dispatchers.Main) {
                 if (call.isSuccessful) {
-                    val categories = sup ?: emptyList()
-                    categoryList.clear()
-                    categoryList.addAll(categories)
+                    monitorResponse = response ?: return@withContext
+                    binding.txtTotalInventary.text = monitorResponse.totalInventario.toString()
+                    categoryList.addAll(monitorResponse.categories)
                     adapter.notifyDataSetChanged()
-
                 } else {
-                    showError()
-                }
-            }
-        }
-    }
-
-    private fun searchInventory() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIServiceProduct::class.java).getAllProducts("product/quantity")
-            val sup = call.body()
-
-            withContext(Dispatchers.Main){
-                if(call.isSuccessful){
-                    val products = sup?: emptyList()
-                    productList.clear()
-                    productList.addAll(products)
-                    adapter.notifyDataSetChanged()
-                    // Calcula el total del inventario
-                    val totalInventario = productList.sumOf { it.totalInventory }
-
-                    // Actualiza el TextView con el total del inventario
-                    binding.txtTotalInventary.text = getString(R.string.total_inventory_format, totalInventario)
-                }else{
                     showError()
                 }
             }

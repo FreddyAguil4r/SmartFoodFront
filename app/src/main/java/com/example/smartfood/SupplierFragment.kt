@@ -54,9 +54,12 @@ class SupplierFragment : Fragment() {
                return false
            }
            override fun onQueryTextChange(newText: String?): Boolean {
-               newText?.let {
-                   // Filtra la lista de proveedores basado en el texto ingresado
-                   adapter.filter.filter(it)
+               if (newText.isNullOrEmpty()) {
+                   adapter.updateList(supplierList.value ?: emptyList())
+               } else {
+                   newText.let {
+                       adapter.filter.filter(it)
+                   }
                }
                return false
            }
@@ -103,6 +106,7 @@ class SupplierFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             val call = getRetrofit().create(APIServiceSupplier::class.java).getAllSuplier("supplier/all")
             val sup = call.body()
+
             withContext(Dispatchers.Main){
                 if(call.isSuccessful){
                     //?: En caso de que sea nulo, se asigna el valor de la derecha.

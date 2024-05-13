@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
             when(menuItem.itemId){
                 R.id.items-> replaceFragment(ItemsFragment())
                 R.id.inventory-> replaceFragment(InventoryFragment())
-                R.id.trending-> replaceFragment(TrendingFragment())
+                R.id.trending-> replaceFragment(com.example.smartfood.TrendingFragment())
                 R.id.supplier-> replaceFragment(SupplierFragment())
                 else->  {
                 }

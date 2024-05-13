@@ -12,8 +12,11 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -22,27 +25,41 @@ import com.example.smartfood.ModelResponse.ProductResponse
 import com.example.smartfood.ModelResponse.SupplierResponse
 import com.example.smartfood.ModelResponse.UnitResponse
 import com.example.smartfood.R
-import com.example.smartfood.Request.ProductRequest
 import com.example.smartfood.Request.PurchaseRequest
+import com.example.smartfood.Request.SubstractProductRequest
 import com.example.smartfood.Request.UpdateProductRequest
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Locale
 
-class InventoryAdapter(private val productList: List<ProductResponse>,
+class InventoryAdapter(private var productList: List<ProductResponse>,
                        private val deleteProducts: (Int) -> Unit,
                        private val updateProducts : suspend (Int, UpdateProductRequest) -> Unit,
                        private val makePurchase : (PurchaseRequest) -> Unit,
+                       private val substractPurchase: (SubstractProductRequest) -> Unit,
                        private val dataSpinnerSupplier : List<String>,
                        private val supplierList: List<SupplierResponse>,
                        private val dataSpinnerUnits : List<String>,
                        private val unitList: List<UnitResponse>
-):RecyclerView.Adapter<InventoryAdapter.ViewHolder>() {
+):RecyclerView.Adapter<InventoryAdapter.ViewHolder>(),Filterable {
 
     private var idSupplier=0
     private var idUnit=0
+    var filteredProductList = mutableListOf<ProductResponse>().apply {
+        addAll(productList)
+    }
+
+    fun updateList(newProducts: List<ProductResponse>) {
+        this.productList = newProducts
+        this.filteredProductList.clear()
+        this.filteredProductList.addAll(newProducts)
+        notifyDataSetChanged()
+    }
+
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textTitle: TextView
         var editButton: ImageButton
@@ -50,6 +67,7 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
         var purchaseProductButton : Button
         var removeProductButton : Button
         var textCantidad: TextView
+        var textSubstract : TextView
         init {
             textTitle = itemView.findViewById(R.id.item_product)
             textCantidad = itemView.findViewById(R.id.quantityTextView)
@@ -57,6 +75,8 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
             deleteButton = itemView.findViewById(R.id.delete_button)
             purchaseProductButton = itemView.findViewById(R.id.addProductButton)
             removeProductButton = itemView.findViewById(R.id.removeProductButton)
+            filteredProductList.addAll(productList)
+            textSubstract = itemView.findViewById(R.id.editTextSubstract)
         }
     }
 
@@ -67,11 +87,11 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
     }
 
     override fun getItemCount(): Int {
-        return productList.size
+        return filteredProductList.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val sup = productList[position]
+        val sup = filteredProductList[position]
         holder.textTitle.text = sup.productName
         holder.textCantidad.text = "Cantidad: ${sup.quantity.toString()}"
 
@@ -79,7 +99,6 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
         holder.deleteButton.setOnClickListener {
             deleteProducts(sup.productId)
         }
-
         holder.editButton.setOnClickListener {
             val context = holder.itemView.context
             val dialogView =
@@ -107,7 +126,6 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
             }
             alertDialog.show()
         }
-
         holder.purchaseProductButton.setOnClickListener {
             val context = holder.itemView.context
             val dialogView: View = LayoutInflater.from(context).inflate(R.layout.dialog_layout_purchase_product,null)
@@ -160,6 +178,7 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
 
             alertDialog.show()
         }
+
         holder.removeProductButton.setOnClickListener {
 
         }
@@ -177,6 +196,35 @@ class InventoryAdapter(private val productList: List<ProductResponse>,
 
         with(NotificationManagerCompat.from(context)) {
             notify(notificationId, builder.build())
+        }
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                val filterResults = FilterResults()
+
+                // Si no hay búsqueda, devuelve la lista completa.
+                if (charSearch.isEmpty()) {
+                    filterResults.values = productList
+                } else {
+                    // Filtra por RUC.
+                    filterResults.values = productList.filter {
+                        it.productName.toLowerCase(Locale.getDefault()).contains(charSearch.toLowerCase(
+                            Locale.getDefault()))
+                    }
+                }
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                results?.values?.let {
+                    @Suppress("UNCHECKED_CAST")
+                    filteredProductList = it as MutableList<ProductResponse>
+                    notifyDataSetChanged()
+                }
+            }
         }
     }
 }

@@ -31,7 +31,7 @@ class SupplierAdapter(private var suplierList: List<SupplierResponse>,
     fun updateList(newSuppliers: List<SupplierResponse>) {
         this.suplierList = newSuppliers
         this.filteredSupplierList.clear()
-        this.filteredSupplierList.addAll(newSuppliers)
+        this.filteredSupplierList.addAll(newSuppliers.distinct())
         notifyDataSetChanged()
     }
 
@@ -66,7 +66,6 @@ class SupplierAdapter(private var suplierList: List<SupplierResponse>,
         holder.deleteButton.setOnClickListener {
             deleteSuppliers(sup.id)
         }
-
         holder.editButton.setOnClickListener {
             val context = holder.itemView.context
             val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_layout_update_supplier,null)
