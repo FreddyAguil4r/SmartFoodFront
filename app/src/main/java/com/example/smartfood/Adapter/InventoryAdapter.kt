@@ -67,7 +67,8 @@ class InventoryAdapter(private var productList: List<ProductResponse>,
         var purchaseProductButton : Button
         var removeProductButton : Button
         var textCantidad: TextView
-        var textSubstract : TextView
+        var editTextSubstract: EditText = itemView.findViewById(R.id.editTextSubstract)
+
         init {
             textTitle = itemView.findViewById(R.id.item_product)
             textCantidad = itemView.findViewById(R.id.quantityTextView)
@@ -75,8 +76,6 @@ class InventoryAdapter(private var productList: List<ProductResponse>,
             deleteButton = itemView.findViewById(R.id.delete_button)
             purchaseProductButton = itemView.findViewById(R.id.addProductButton)
             removeProductButton = itemView.findViewById(R.id.removeProductButton)
-            filteredProductList.addAll(productList)
-            textSubstract = itemView.findViewById(R.id.editTextSubstract)
         }
     }
 
@@ -178,9 +177,15 @@ class InventoryAdapter(private var productList: List<ProductResponse>,
 
             alertDialog.show()
         }
-
         holder.removeProductButton.setOnClickListener {
-
+            val cantidadARestarStr = holder.editTextSubstract.text.toString()
+            if (cantidadARestarStr.isNotEmpty()) {
+                val cantidadARestar = cantidadARestarStr.toInt()
+                val subtractProductRequest = SubstractProductRequest(sup.productId, cantidadARestar)
+                substractPurchase(subtractProductRequest)
+            } else {
+                Toast.makeText(holder.itemView.context, "Por favor, ingresa la cantidad a restar.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

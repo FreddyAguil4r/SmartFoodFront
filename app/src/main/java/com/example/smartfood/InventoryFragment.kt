@@ -71,8 +71,12 @@ class InventoryFragment : Fragment() {
                 return false
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let {
-                    adapter.filter.filter(it)
+                if (newText.isNullOrEmpty()) {
+                    adapter.updateList(productList.value ?: emptyList())
+                } else {
+                    newText.let {
+                        adapter.filter.filter(it)
+                    }
                 }
                 return false
             }
@@ -189,7 +193,7 @@ class InventoryFragment : Fragment() {
                 val apiService = getRetrofit().create(APIServiceProduct::class.java)
                 val response = apiService.substractProduct(substractRequest)
                 if (response.isSuccessful) {
-                    showSuccessful()
+                    searchAllProducts()
                 } else {
                     showError()
                 }

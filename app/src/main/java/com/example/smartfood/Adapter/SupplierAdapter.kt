@@ -48,7 +48,6 @@ class SupplierAdapter(private var suplierList: List<SupplierResponse>,
             textAddress = itemView.findViewById(R.id.text_supplier_address)
             editButton = itemView.findViewById(R.id.edit_button)
             deleteButton = itemView.findViewById(R.id.delete_button)
-            filteredSupplierList.addAll(suplierList)
         }
     }
 
