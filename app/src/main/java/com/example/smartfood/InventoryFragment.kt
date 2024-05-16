@@ -2,6 +2,7 @@ package com.example.smartfood
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.ProgressDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -26,8 +27,10 @@ import com.example.smartfood.Service.APIServicePurchase
 import com.example.smartfood.Service.APIServiceSupplier
 import com.example.smartfood.Service.APIServiceUnit
 import com.example.smartfood.databinding.FragmentInventoryBinding
+import com.example.smartfood.network.RetrofitClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
@@ -84,31 +87,34 @@ class InventoryFragment : Fragment() {
 
         return binding.root
     }
-
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://smartfood-421500.uc.r.appspot.com")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-    private fun searchAllProducts(){
+    private fun searchAllProducts(retryCount: Int = 0) {
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIServiceProduct::class.java).getAllProducts("product/quantity")
-            val sup = call.body()
-
-            withContext(Dispatchers.Main){
-                if(call.isSuccessful){
-                    val products = sup?: emptyList()
-                    productList.postValue(products)
-                }else{
-                    showError()
+            try {
+                val call = RetrofitClient.instance.create(APIServiceProduct::class.java).getAllProducts("product/quantity")
+                val sup = call.body()
+                withContext(Dispatchers.Main) {
+                    if (call.isSuccessful) {
+                        val products = sup ?: emptyList()
+                        productList.postValue(products)
+                    } else {
+                        showErrorConnection(10)
+                    }
+                }
+            } catch (e: Exception) {
+                if (retryCount < 3) {
+                    delay(2000)
+                    searchAllProducts(retryCount + 1)
+                } else {
+                    withContext(Dispatchers.Main) {
+                        showErrorConnection(retryCount)
+                    }
                 }
             }
         }
     }
     private fun deleteProducts(productId: Int){
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIServiceProduct::class.java).deleteProduct(productId)
+            val call = RetrofitClient.instance.create(APIServiceProduct::class.java).deleteProduct(productId)
             withContext(Dispatchers.Main){
                 if(call.isSuccessful){
                     searchAllProducts()
@@ -120,7 +126,7 @@ class InventoryFragment : Fragment() {
     }
     private fun updateProducts(productId: Int, productRequest: UpdateProductRequest) {
         CoroutineScope(Dispatchers.IO).launch {
-            val apiService = getRetrofit().create(APIServiceProduct::class.java)
+            val apiService = RetrofitClient.instance.create(APIServiceProduct::class.java)
             val response = apiService.updateProduct(productId, productRequest)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
@@ -134,7 +140,7 @@ class InventoryFragment : Fragment() {
     private fun searchAllSupplier() {
         CoroutineScope(Dispatchers.IO).launch {
             val call =
-                getRetrofit().create(APIServiceSupplier::class.java).getAllSuplier("supplier/all")
+                RetrofitClient.instance.create(APIServiceSupplier::class.java).getAllSuplier("supplier/all")
             val sup = call.body()
 
             withContext(Dispatchers.Main) {
@@ -154,7 +160,7 @@ class InventoryFragment : Fragment() {
     }
     private fun searchAllUnits(){
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIServiceUnit::class.java)
+            val call = RetrofitClient.instance.create(APIServiceUnit::class.java)
                 .getAllUnits("unit/all")
             val sup = call.body()
             withContext(Dispatchers.Main) {
@@ -175,10 +181,10 @@ class InventoryFragment : Fragment() {
     private fun makePurchase(purchaseRequest: PurchaseRequest) {
         CoroutineScope(Dispatchers.IO).launch {
             val call =
-                getRetrofit().create(APIServicePurchase::class.java).makePurchaseProduct(purchaseRequest)
+                RetrofitClient.instance.create(APIServicePurchase::class.java).makePurchaseProduct(purchaseRequest)
             withContext(Dispatchers.Main) {
                 if (call.isSuccessful) {
-                    showSuccessful()
+                    showSuccessfulMakePurchase()
                     searchAllProducts()
                 } else {
                     showError()
@@ -186,11 +192,10 @@ class InventoryFragment : Fragment() {
             }
         }
     }
-
     private fun substractPurchase(substractRequest: SubstractProductRequest){
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val apiService = getRetrofit().create(APIServiceProduct::class.java)
+                val apiService = RetrofitClient.instance.create(APIServiceProduct::class.java)
                 val response = apiService.substractProduct(substractRequest)
                 if (response.isSuccessful) {
                     searchAllProducts()
@@ -202,13 +207,35 @@ class InventoryFragment : Fragment() {
             }
         }
     }
-
-    private fun showSuccessful(){
+    private fun showSuccessfulMakePurchase(){
         Toast.makeText(requireContext(),"Se añadio la compra exitosamente", Toast.LENGTH_SHORT).show()
     }
     private fun showError() {
         Toast.makeText(requireContext(),"Error", Toast.LENGTH_SHORT).show()
     }
+
+    private fun showErrorConnection(retryCount: Int = 0) {
+        if (retryCount >= 3) {
+            Toast.makeText(requireContext(), "Error en la conexión revise su red.", Toast.LENGTH_LONG).show()
+        } else {
+            // Muestra un diálogo de progreso aquí
+            val progressDialog = ProgressDialog(requireContext()).apply {
+                setTitle("Cargando")
+                setMessage("Intentando reconectar...")
+                setCancelable(false) // para que no se pueda cancelar
+            }
+            progressDialog.show()
+
+            CoroutineScope(Dispatchers.IO).launch {
+                delay(2000) // Espera antes de ocultar el diálogo
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    searchAllProducts(retryCount + 1)
+                }
+            }
+        }
+    }
+
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
@@ -227,5 +254,4 @@ class InventoryFragment : Fragment() {
         // ID único para el canal de notificaciones
         const val CHANNEL_ID = "inventory_channel"
     }
-
 }

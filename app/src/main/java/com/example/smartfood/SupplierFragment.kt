@@ -1,6 +1,7 @@
 package com.example.smartfood
 
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,8 +19,10 @@ import com.example.smartfood.ModelResponse.SupplierResponse
 import com.example.smartfood.Request.SupplierRequest
 import com.example.smartfood.Service.APIServiceSupplier
 import com.example.smartfood.databinding.FragmentSupplierBinding
+import com.example.smartfood.network.RetrofitClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
@@ -70,14 +73,9 @@ class SupplierFragment : Fragment() {
    }
 
     private fun addNewSupplierDialog() {
-        // Infla el layout del Custom Dialog
         val dialogView: View = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_layout_supplier, null)
-
-        // Crea un AlertDialog
         val builder = AlertDialog.Builder(requireContext())
         builder.setView(dialogView)
-
-        // Crea el AlertDialog
         val alertDialog = builder.create()
 
         dialogView.findViewById<Button>(R.id.btnSave).setOnClickListener {
@@ -86,41 +84,42 @@ class SupplierFragment : Fragment() {
             val direccion = dialogView.findViewById<EditText>(R.id.editTextDireccion).text.toString()
             val supplierRequest = SupplierRequest(nombre, ruc, direccion)
             addSupplier(supplierRequest)
-            alertDialog.dismiss() // Cerrar el diálogo después de agregar el proveedor.
+            alertDialog.dismiss()
         }
-
         dialogView.findViewById<Button>(R.id.btnCancel).setOnClickListener {
             alertDialog.dismiss()
         }
-
-        // Muestra el AlertDialog
         alertDialog.show()
     }
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://smartfood-421500.uc.r.appspot.com")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-    private fun searchAllSupplier(){
+    private fun searchAllSupplier(retryCount: Int = 0) {
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIServiceSupplier::class.java).getAllSuplier("supplier/all")
-            val sup = call.body()
+            try {
+                val call = RetrofitClient.instance.create(APIServiceSupplier::class.java).getAllSuplier("supplier/all")
+                val sup = call.body()
 
-            withContext(Dispatchers.Main){
-                if(call.isSuccessful){
-                    //?: En caso de que sea nulo, se asigna el valor de la derecha.
-                    val suppliers = sup?: emptyList()
-                    supplierList.postValue(suppliers)
-                }else{
-                    showError()
+                withContext(Dispatchers.Main) {
+                    if (call.isSuccessful) {
+                        val suppliers = sup ?: emptyList()
+                        supplierList.postValue(suppliers)
+                    } else {
+                        showError()
+                    }
+                }
+            } catch (e: Exception) {
+                if (retryCount < 3) {
+                    delay(2000)
+                    searchAllSupplier(retryCount + 1)
+                } else {
+                    withContext(Dispatchers.Main) {
+                        showError()
+                    }
                 }
             }
         }
     }
     private fun addSupplier(supplierRequest: SupplierRequest) {
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIServiceSupplier::class.java).addSupplier(supplierRequest)
+            val call = RetrofitClient.instance.create(APIServiceSupplier::class.java).addSupplier(supplierRequest)
             withContext(Dispatchers.Main) {
                 if (call.isSuccessful) {
                     searchAllSupplier()
@@ -132,7 +131,7 @@ class SupplierFragment : Fragment() {
     }
     suspend fun updateSuppliers(supplierId: Int, supplierRequest: SupplierRequest) {
         CoroutineScope(Dispatchers.IO).launch {
-            val apiService = getRetrofit().create(APIServiceSupplier::class.java)
+            val apiService = RetrofitClient.instance.create(APIServiceSupplier::class.java)
             val response = apiService.updateSupplier(supplierId, supplierRequest)  // Call editSupplier method
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
@@ -146,7 +145,7 @@ class SupplierFragment : Fragment() {
     }
     private fun deleteSupplier(supplierId: Int){
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIServiceSupplier::class.java).deleteSupplier(supplierId)
+            val call = RetrofitClient.instance.create(APIServiceSupplier::class.java).deleteSupplier(supplierId)
             withContext(Dispatchers.Main){
                 if(call.isSuccessful){
                     searchAllSupplier()
@@ -156,9 +155,28 @@ class SupplierFragment : Fragment() {
             }
         }
     }
-    private fun showError() {
-        Toast.makeText(requireContext(),"Error",Toast.LENGTH_SHORT).show()
+    private fun showError(retryCount: Int = 0) {
+        if (retryCount >= 3) {
+            Toast.makeText(requireContext(), "Error en la conexión. Revise su red.", Toast.LENGTH_LONG).show()
+        } else {
+            // Muestra un diálogo de progreso aquí
+            val progressDialog = ProgressDialog(requireContext()).apply {
+                setTitle("Cargando")
+                setMessage("Intentando reconectar...")
+                setCancelable(false) // para que no se pueda cancelar
+            }
+            progressDialog.show()
+
+            CoroutineScope(Dispatchers.IO).launch {
+                delay(2000) // Espera antes de ocultar el diálogo
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    searchAllSupplier(retryCount + 1)
+                }
+            }
+        }
     }
+
     private fun showErrorDelete() {
         Toast.makeText(requireContext(),"Error delete method",Toast.LENGTH_SHORT).show()
     }

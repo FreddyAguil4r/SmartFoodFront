@@ -62,8 +62,8 @@ class InventoryAdapter(private var productList: List<ProductResponse>,
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textTitle: TextView
-        var editButton: ImageButton
-        var deleteButton: ImageButton
+        var editButton: Button
+        var deleteButton: Button
         var purchaseProductButton : Button
         var removeProductButton : Button
         var textCantidad: TextView

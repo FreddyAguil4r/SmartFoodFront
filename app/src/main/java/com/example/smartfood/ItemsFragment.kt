@@ -1,5 +1,6 @@
 package com.example.smartfood
 
+import android.animation.ObjectAnimator
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -25,6 +27,7 @@ import com.example.smartfood.Service.APIServiceCategory
 import com.example.smartfood.Service.APIServiceProduct
 import com.example.smartfood.Service.APIServiceUnit
 import com.example.smartfood.databinding.FragmentItemsBinding
+import com.example.smartfood.network.RetrofitClient
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +55,8 @@ class ItemsFragment : Fragment() {
         R.drawable.suministros,
         R.drawable.fruta,
         R.drawable.pescado,
+        R.drawable.frutos_secos,
+        R.drawable.alimentos_liquidos,
         R.drawable.df,
     )
 
@@ -60,7 +65,7 @@ class ItemsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentItemsBinding.inflate(inflater)
-
+        binding.root.alpha = 0f
         binding.rcyView.layoutManager = LinearLayoutManager(requireContext())
         adapter = ItemContainerAdapter(categoryListI, imageList)
         binding.rcyView.adapter = adapter
@@ -68,6 +73,7 @@ class ItemsFragment : Fragment() {
         searchAllCategoriesWithProduct()
         binding.fabAddCategory.setOnClickListener { openDialogAddNewCategory() }
         binding.floatingButton.setOnClickListener { openDialogAddNewProduct() }
+        fadeInAnimation(binding.root)
         return binding.root
     }
 
@@ -133,16 +139,10 @@ class ItemsFragment : Fragment() {
         }
         alertDialog.show()
     }
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://smartfood-421500.uc.r.appspot.com")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
     private fun addCategory(categoryRequest: CategoryRequest) {
         CoroutineScope(Dispatchers.IO).launch {
             val call =
-                getRetrofit().create(APIServiceCategory::class.java).addCategory(categoryRequest)
+                RetrofitClient.instance.create(APIServiceCategory::class.java).addCategory(categoryRequest)
             withContext(Dispatchers.Main) {
                 if (call.isSuccessful) {
                     searchAllCategoriesWithProduct()
@@ -156,7 +156,7 @@ class ItemsFragment : Fragment() {
     private fun addProduct(productRequest: ProductRequest) {
         CoroutineScope(Dispatchers.IO).launch {
             val call =
-                getRetrofit().create(APIServiceProduct::class.java).addProduct(productRequest)
+                RetrofitClient.instance.create(APIServiceProduct::class.java).addProduct(productRequest)
             withContext(Dispatchers.Main) {
                 if (call.isSuccessful) {
                     searchAllCategoriesWithProduct()
@@ -169,7 +169,7 @@ class ItemsFragment : Fragment() {
     }
     private fun searchAllCategories() {
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIServiceCategory::class.java)
+            val call = RetrofitClient.instance.create(APIServiceCategory::class.java)
                 .getAllCategories("category/all")
             val sup = call.body()
             //Variable donde esta la respuesta
@@ -188,7 +188,7 @@ class ItemsFragment : Fragment() {
     }
     private fun searchAllUnits(){
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIServiceUnit::class.java)
+            val call = RetrofitClient.instance.create(APIServiceUnit::class.java)
                 .getAllUnits("unit/all")
             val sup = call.body()
             withContext(Dispatchers.Main) {
@@ -205,12 +205,14 @@ class ItemsFragment : Fragment() {
         }
     }
     private fun searchAllCategoriesWithProduct(retryCount: Int = 0) {
+        binding.progressCircular.visibility = View.VISIBLE
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val call = getRetrofit().create(APIServiceCategory::class.java)
+                val call = RetrofitClient.instance.create(APIServiceCategory::class.java)
                     .getAllCategoriesWithProducts("category/products/quantity")
                 val sup = call.body()
                 withContext(Dispatchers.Main) {
+                    binding.progressCircular.visibility = View.GONE
                     if (call.isSuccessful) {
                         val categories = sup ?: emptyList()
                         categoryListI.clear()
@@ -221,6 +223,7 @@ class ItemsFragment : Fragment() {
                     }
                 }
             } catch (e: Exception) {
+                binding.progressCircular.visibility = View.GONE
                 if (retryCount < 3) {
                     delay(2000)
                     searchAllCategoriesWithProduct(retryCount + 1)
@@ -237,22 +240,20 @@ class ItemsFragment : Fragment() {
             Toast.makeText(requireContext(), "Error en la conexión revise su red.", Toast.LENGTH_LONG).show()
             searchAllCategories()
         } else {
-            // Muestra un diálogo de progreso aquí
-            val progressDialog = ProgressDialog(requireContext()).apply {
-                setTitle("Cargando")
-                setMessage("Intentando reconectar...")
-                setCancelable(false) // para que no se pueda cancelar
-            }
-            progressDialog.show()
-
+            binding.progressCircular.visibility = View.VISIBLE
             CoroutineScope(Dispatchers.IO).launch {
-                delay(2000) // Espera antes de ocultar el diálogo
+                delay(2000)
                 withContext(Dispatchers.Main) {
-                    progressDialog.dismiss()
+                    binding.progressCircular.visibility = View.GONE
                     searchAllCategoriesWithProduct(retryCount + 1)
                 }
             }
         }
     }
-
+    private fun fadeInAnimation(view: View) {
+        val fadeIn = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
+        fadeIn.duration = 2000
+        fadeIn.interpolator = DecelerateInterpolator()
+        fadeIn.start()
+    }
 }
