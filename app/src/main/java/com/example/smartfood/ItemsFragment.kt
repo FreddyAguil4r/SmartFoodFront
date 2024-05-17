@@ -205,7 +205,6 @@ class ItemsFragment : Fragment() {
         }
     }
     private fun searchAllCategoriesWithProduct(retryCount: Int = 0) {
-        binding.progressCircular.visibility = View.VISIBLE
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val call = RetrofitClient.instance.create(APIServiceCategory::class.java)
@@ -223,30 +222,31 @@ class ItemsFragment : Fragment() {
                     }
                 }
             } catch (e: Exception) {
-                binding.progressCircular.visibility = View.GONE
-                if (retryCount < 3) {
-                    delay(2000)
-                    searchAllCategoriesWithProduct(retryCount + 1)
-                } else {
-                    withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
+                    binding.progressCircular.visibility = View.GONE
+                    if (retryCount < 3) {
+                        delay(2000)
+                        searchAllCategoriesWithProduct(retryCount + 1)
+                    } else {
                         showError(10)
                     }
                 }
             }
         }
     }
-    private fun showError(retryCount: Int) {
+    private suspend fun showError(retryCount: Int) {
         if (retryCount >= 3) {
-            Toast.makeText(requireContext(), "Error en la conexión revise su red.", Toast.LENGTH_LONG).show()
-            searchAllCategories()
+            withContext(Dispatchers.Main) {
+                Toast.makeText(requireContext(), "Error en la conexión revise su red.", Toast.LENGTH_LONG).show()
+            }
         } else {
-            binding.progressCircular.visibility = View.VISIBLE
-            CoroutineScope(Dispatchers.IO).launch {
-                delay(2000)
-                withContext(Dispatchers.Main) {
-                    binding.progressCircular.visibility = View.GONE
-                    searchAllCategoriesWithProduct(retryCount + 1)
-                }
+            withContext(Dispatchers.Main) {
+                binding.progressCircular.visibility = View.VISIBLE
+            }
+            delay(2000)
+            withContext(Dispatchers.Main) {
+                binding.progressCircular.visibility = View.GONE
+                searchAllCategoriesWithProduct(retryCount + 1)
             }
         }
     }

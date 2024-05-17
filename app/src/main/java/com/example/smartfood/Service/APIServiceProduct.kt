@@ -17,11 +17,8 @@ import retrofit2.http.Url
 interface APIServiceProduct {
     @GET
     suspend fun getProductById(@Url url:String): Response<ProductResponse>
-
     @GET
     suspend fun getAllProducts(@Url url:String): Response<List<ProductResponse>>
-
-
     @POST("product")
     suspend fun addProduct(@Body supplier: ProductRequest): Response<ProductResponse>
 

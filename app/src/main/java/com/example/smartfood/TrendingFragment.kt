@@ -1,6 +1,7 @@
 package com.example.smartfood
 
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -20,8 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class TrendingFragment : Fragment() {
     private lateinit var binding: FragmentTrendingBinding
@@ -40,6 +39,11 @@ class TrendingFragment : Fragment() {
         TotalValuesMonitor()
         adapter = TrendingAdapter(categoryList)
         recyclerView.adapter = adapter
+
+        binding.btnLevels.setOnClickListener {
+            val intent = Intent(requireContext(),SecondaryActivity::class.java)
+            startActivity(intent)
+        }
         return binding.root
     }
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/monthlyDemandFragment">
+    <fragment
+        android:id="@+id/monthlyDemandFragment"
+        android:name="com.example.smartfood.MonthlyDemandFragment"
+        android:label="fragment_monthly_demand"
+        tools:layout="@layout/fragment_monthly_demand" >
+        <action
+            android:id="@+id/action_monthlyDemandFragment_to_seasonalDemandFragment"
+            app:destination="@id/seasonalDemandFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/seasonalDemandFragment"
+        android:name="com.example.smartfood.SeasonalDemandFragment"
+        android:label="fragment_seasonal_demand"
+        tools:layout="@layout/fragment_seasonal_demand" />
+</navigation>
