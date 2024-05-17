@@ -5,11 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.smartfood.ModelResponse.ProductResponseBigQuery
+import com.example.smartfood.ModelResponse.ProductDemand
 import com.example.smartfood.R
 
-class MonthlyDemandAdapter(private val categoryListForecast : List<ProductResponseBigQuery>) :
-    RecyclerView.Adapter<MonthlyDemandAdapter.ViewHolder>() {
+class SortedAdapter(private val productListSorted : List<ProductDemand>)
+    :RecyclerView.Adapter<SortedAdapter.ViewHolder>() {
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textProductName : TextView
         var textForecastDemand : TextView
@@ -20,15 +21,16 @@ class MonthlyDemandAdapter(private val categoryListForecast : List<ProductRespon
             textDate = itemView.findViewById(R.id.text_date)
         }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.card_layout_monhtly_forecast, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.card_layout_sorted, parent, false)
         return ViewHolder(view)
     }
-    override fun getItemCount(): Int = categoryListForecast.size
+    override fun getItemCount(): Int = productListSorted.size
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = categoryListForecast[position]
+        val item = productListSorted[position]
         holder.textProductName.text = item.productName.toString()
         holder.textForecastDemand.text = item.cantidadComprar.toString()
     }
 }
-

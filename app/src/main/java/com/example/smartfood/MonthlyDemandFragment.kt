@@ -103,19 +103,21 @@ class MonthlyDemandFragment : Fragment() {
 
     private fun showError(retryCount: Int = 0) {
         if (retryCount >= 3) {
-            Toast.makeText(requireContext(), "Error en la conexión. Revise su red.", Toast.LENGTH_LONG).show()
+            if (isAdded) {
+                Toast.makeText(requireContext(), "Error en la conexión. Revise su red.", Toast.LENGTH_LONG).show()
+            }
         } else {
-            // Muestra un diálogo de progreso aquí
             val progressDialog = ProgressDialog(requireContext()).apply {
                 setTitle("Cargando")
                 setMessage("Intentando reconectar...")
-                setCancelable(false) // para que no se pueda cancelar
+                setCancelable(false)
+            }
+            if (isAdded) {
+                progressDialog.show()
             }
             progressDialog.show()
-
             CoroutineScope(Dispatchers.IO).launch {
-                delay(2000) // Espera antes de ocultar el diálogo
-                withContext(Dispatchers.Main) {
+                if (isAdded) {
                     progressDialog.dismiss()
                     CallStoreProcedure(retryCount + 1)
                 }

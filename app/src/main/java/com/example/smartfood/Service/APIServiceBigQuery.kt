@@ -10,4 +10,9 @@ interface APIServiceBigQuery {
     suspend fun callSp(@Url url:String) :Response<Unit>
     @GET
     suspend fun getAllProductsWithDemand(@Url url:String): Response<List<ProductResponseBigQuery>>
+
+    @GET
+    suspend fun callSpBimensual(@Url url:String) :Response<Unit>
+    @GET
+    suspend fun getAllProductsWithDemandBimensual(@Url url:String): Response<List<ProductResponseBigQuery>>
 }

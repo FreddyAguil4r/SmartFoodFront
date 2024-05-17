@@ -16,7 +16,7 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/text_product_name"
+            android:id="@+id/text_product_name_bimensual"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="f"
@@ -25,18 +25,10 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/text_forecast_demand"
+            android:id="@+id/text_bimensualforecast_demand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="1"
-            android:textColor="@color/md_theme_light_inverseOnSurface"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/text_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:textColor="@color/md_theme_light_inverseOnSurface"
             android:textSize="18sp"
             android:textStyle="bold" />

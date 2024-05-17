@@ -32,14 +32,6 @@
             android:textColor="@color/md_theme_light_inverseOnSurface"
             android:textSize="18sp"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/text_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/md_theme_light_inverseOnSurface"
-            android:textSize="18sp"
-            android:textStyle="bold" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </com.google.android.material.card.MaterialCardView>

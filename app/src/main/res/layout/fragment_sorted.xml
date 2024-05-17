@@ -27,7 +27,8 @@
         android:layout_marginTop="20dp"
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="660dp"
+        android:layout_height="600dp"
+        app:layout_constraintBottom_toTopOf="@+id/mounthSpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_title">
@@ -36,11 +37,12 @@
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center"> <!-- Centrando el contenido -->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewMonthlyDemand"
-                android:layout_width="379dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingEnd="35dp">
 
@@ -48,20 +50,32 @@
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="379dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/mounthSpinner"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:padding="10dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
-        app:layout_constraintVertical_bias="0.39"
-        tools:layout_editor_absoluteX="16dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/btn_seasonal_forecast"
+        <AutoCompleteTextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="PRONOSTICO POR DEMANDA ESTACIONAL " />
-    </LinearLayout>
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_seasonal_forecast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/baseline_add_circle_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.84000003" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
