@@ -3,13 +3,14 @@ package com.example.smartfood
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class SecondaryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_secondary)
+
+        val actionBar = supportActionBar
+        actionBar?.title = "Pronóstico de demanda mensual"
     }
 }

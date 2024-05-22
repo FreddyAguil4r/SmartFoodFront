@@ -2,66 +2,48 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="15dp"
-    android:orientation="horizontal">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchViewInventory"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="214dp"
-        android:gravity="center"
-        android:text="Pronostico de demanda mensual"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:background="@drawable/search_view_bg"
+        android:iconifiedByDefault="false"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- ScrollView -->
     <ScrollView
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
         android:id="@+id/scrollView2"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="600dp"
-        app:layout_constraintBottom_toTopOf="@+id/mounthSpinner"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchViewInventory"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/monthSpinner">
 
-        <LinearLayout
-            android:id="@+id/linearLayout2"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewMonthlyDemand"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"> <!-- Centrando el contenido -->
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewMonthlyDemand"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingEnd="35dp">
-
-            </androidx.recyclerview.widget.RecyclerView>
-        </LinearLayout>
+            android:layout_height="wrap_content"/>
     </ScrollView>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/mounthSpinner"
+        android:id="@+id/monthSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:padding="10dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scrollView2"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <AutoCompleteTextView
+            android:id="@+id/autoCompleteMonth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -71,11 +53,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:layout_marginEnd="15dp"
         android:src="@drawable/baseline_add_circle_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.84000003" />
+        app:layout_constraintVertical_bias="0.85" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+

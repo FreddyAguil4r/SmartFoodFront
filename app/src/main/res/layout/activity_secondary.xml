@@ -6,33 +6,16 @@
     android:id="@+id/seconday_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".SecondaryActivity">
 
-    <!-- AppBarLayout -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Base.Theme.Smartfood">
-
-        <!-- Toolbar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Base.Theme.Smartfood" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- Contenedor del fragmento -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph"
+        app:navGraph="@navigation/nav_graph_sorted"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

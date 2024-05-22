@@ -1,17 +1,22 @@
 package com.example.smartfood
 
+import android.R
 import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.Adapter.MonthlyDemandAdapter
+import com.example.smartfood.ModelResponse.MonthlyDemand
+import com.example.smartfood.ModelResponse.ProductDemand
 import com.example.smartfood.ModelResponse.ProductResponseBigQuery
 import com.example.smartfood.Service.APIServiceBigQuery
 import com.example.smartfood.databinding.FragmentMonthlyDemandBinding

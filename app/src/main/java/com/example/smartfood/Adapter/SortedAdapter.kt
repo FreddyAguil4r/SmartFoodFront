@@ -1,5 +1,6 @@
 package com.example.smartfood.Adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +15,9 @@ class SortedAdapter(private val productListSorted : List<ProductDemand>)
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textProductName : TextView
         var textForecastDemand : TextView
-        var textDate : TextView
         init {
             textProductName = itemView.findViewById(R.id.text_product_name)
             textForecastDemand = itemView.findViewById(R.id.text_forecast_demand)
-            textDate = itemView.findViewById(R.id.text_date)
         }
     }
 
@@ -30,7 +29,7 @@ class SortedAdapter(private val productListSorted : List<ProductDemand>)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = productListSorted[position]
-        holder.textProductName.text = item.productName.toString()
-        holder.textForecastDemand.text = item.cantidadComprar.toString()
+        holder.textProductName.text = item.productName
+        holder.textForecastDemand.text = "Cantidad a comprar: ${item.cantidadComprar.toString()}"
     }
 }
