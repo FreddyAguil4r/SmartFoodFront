@@ -218,7 +218,6 @@ class InventoryFragment : Fragment() {
         if (retryCount >= 3) {
             Toast.makeText(requireContext(), "Error en la conexión revise su red.", Toast.LENGTH_LONG).show()
         } else {
-            // Muestra un diálogo de progreso aquí
             val progressDialog = ProgressDialog(requireContext()).apply {
                 setTitle("Cargando")
                 setMessage("Intentando reconectar...")

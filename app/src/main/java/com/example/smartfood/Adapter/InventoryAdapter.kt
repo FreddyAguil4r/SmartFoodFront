@@ -94,6 +94,9 @@ class InventoryAdapter(private var productList: List<ProductResponse>,
         holder.textTitle.text = sup.productName
         holder.textCantidad.text = "Cantidad: ${sup.quantity.toString()}"
 
+        if (sup.quantity < 30) {
+            showLowQuantityNotification(holder.itemView.context, sup.productName)
+        }
 
         holder.deleteButton.setOnClickListener {
             deleteProducts(sup.productId)
@@ -163,12 +166,20 @@ class InventoryAdapter(private var productList: List<ProductResponse>,
             addPurchaseButton.setOnClickListener {
                 val amountEditText = dialogView.findViewById<EditText>(R.id.amountEditText)
                 val unitCostEditText = dialogView.findViewById<EditText>(R.id.unitCostEditText)
-                val amount = amountEditText.text.toString().toInt()
-                val unitCost = unitCostEditText.text.toString().toDouble()
+                val amount = amountEditText.text.toString().toIntOrNull()
+                val unitCost = unitCostEditText.text.toString().toDoubleOrNull()
 
-                val purchaseRequest = PurchaseRequest(amount,unitCost,sup.productId,idSupplier,idUnit)
-                makePurchase(purchaseRequest)
-                alertDialog.dismiss()
+                // Validar que los valores no sean nulos y no sean negativos
+                if (amount == null || unitCost == null) {
+                    Toast.makeText(context, "Por favor, ingrese valores válidos.", Toast.LENGTH_SHORT).show()
+                } else if (amount < 0 || unitCost < 0) {
+                    Toast.makeText(context, "Los valores no pueden ser negativos.", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Si las validaciones pasan, proceder con la solicitud de compra
+                    val purchaseRequest = PurchaseRequest(amount, unitCost, sup.productId, idSupplier, idUnit)
+                    makePurchase(purchaseRequest)
+                    alertDialog.dismiss()
+                }
             }
 
             cancelButton.setOnClickListener {
@@ -190,7 +201,7 @@ class InventoryAdapter(private var productList: List<ProductResponse>,
     }
 
     private fun showLowQuantityNotification(context: Context, productName: String) {
-        val notificationId = 1 // ID único para la notificación
+        val notificationId = 1
 
         val builder = NotificationCompat.Builder(context, InventoryFragment.CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_dialog_alert)
