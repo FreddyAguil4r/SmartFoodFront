@@ -46,10 +46,11 @@ class SupplierFragment : Fragment() {
        adapter = SupplierAdapter(emptyList(),::deleteSupplier,::updateSuppliers)
        recyclerView.adapter = adapter
 
+       searchAllSupplier()
        supplierList.observe(viewLifecycleOwner) { suppliers ->
            adapter.updateList(suppliers)
        }
-       searchAllSupplier()
+
 
        searchView = binding.searchView
        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -96,7 +97,6 @@ class SupplierFragment : Fragment() {
             try {
                 val call = RetrofitClient.instance.create(APIServiceSupplier::class.java).getAllSuplier("supplier/all")
                 val sup = call.body()
-
                 withContext(Dispatchers.Main) {
                     if (call.isSuccessful) {
                         val suppliers = sup ?: emptyList()
@@ -163,12 +163,12 @@ class SupplierFragment : Fragment() {
             val progressDialog = ProgressDialog(requireContext()).apply {
                 setTitle("Cargando")
                 setMessage("Intentando reconectar...")
-                setCancelable(false) // para que no se pueda cancelar
+                setCancelable(true) // Permitir que se pueda cancelar
             }
             progressDialog.show()
 
             CoroutineScope(Dispatchers.IO).launch {
-                delay(2000) // Espera antes de ocultar el diálogo
+                delay(2000) // Espera antes de intentar reconectar
                 withContext(Dispatchers.Main) {
                     progressDialog.dismiss()
                     searchAllSupplier(retryCount + 1)

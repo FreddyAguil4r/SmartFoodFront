@@ -18,17 +18,20 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".SecondaryActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Smartfood.Secondary"/>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Smartfood.SplashScreen">
+            android:name=".LoginActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".SecondaryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Smartfood.Secondary" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Smartfood.SplashScreen" />
     </application>
 </manifest>

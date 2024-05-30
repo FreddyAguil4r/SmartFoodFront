@@ -93,20 +93,26 @@ class InventoryFragment : Fragment() {
                 val call = RetrofitClient.instance.create(APIServiceProduct::class.java).getAllProducts("product/quantity")
                 val sup = call.body()
                 withContext(Dispatchers.Main) {
-                    if (call.isSuccessful) {
-                        val products = sup ?: emptyList()
-                        productList.postValue(products)
-                    } else {
-                        showErrorConnection(10)
+                    if (isAdded) {
+                        if (call.isSuccessful) {
+                            val products = sup ?: emptyList()
+                            productList.postValue(products)
+                        } else {
+                            showErrorConnection(10)
+                        }
                     }
                 }
             } catch (e: Exception) {
-                if (retryCount < 3) {
-                    delay(2000)
-                    searchAllProducts(retryCount + 1)
-                } else {
-                    withContext(Dispatchers.Main) {
-                        showErrorConnection(retryCount)
+                withContext(Dispatchers.Main) {
+                    if (isAdded) {
+                        if (retryCount < 3) {
+                            delay(2000)
+                            searchAllProducts(retryCount + 1)
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                showErrorConnection(retryCount)
+                            }
+                        }
                     }
                 }
             }

@@ -211,24 +211,28 @@ class ItemsFragment : Fragment() {
                     .getAllCategoriesWithProducts("category/products/quantity")
                 val sup = call.body()
                 withContext(Dispatchers.Main) {
-                    binding.progressCircular.visibility = View.GONE
-                    if (call.isSuccessful) {
-                        val categories = sup ?: emptyList()
-                        categoryListI.clear()
-                        categoryListI.addAll(categories)
-                        adapter.notifyDataSetChanged()
-                    } else {
-                        showError(10)
+                    if (isAdded) {
+                        binding.progressCircular.visibility = View.GONE
+                        if (call.isSuccessful) {
+                            val categories = sup ?: emptyList()
+                            categoryListI.clear()
+                            categoryListI.addAll(categories)
+                            adapter.notifyDataSetChanged()
+                        } else {
+                            showError(10)
+                        }
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    binding.progressCircular.visibility = View.GONE
-                    if (retryCount < 3) {
-                        delay(2000)
-                        searchAllCategoriesWithProduct(retryCount + 1)
-                    } else {
-                        showError(10)
+                    if (isAdded) {
+                        binding.progressCircular.visibility = View.GONE
+                        if (retryCount < 3) {
+                            delay(2000)
+                            searchAllCategoriesWithProduct(retryCount + 1)
+                        } else {
+                            showError(10)
+                        }
                     }
                 }
             }

@@ -52,24 +52,30 @@ class TrendingFragment : Fragment() {
             try {
                 val call = RetrofitClient.instance.create(APIServiceTrending::class.java).getTotalMonitor("category/quantity")
                 val response = call.body()
-
                 withContext(Dispatchers.Main) {
-                    if (call.isSuccessful) {
-                        monitorResponse = response ?: return@withContext
-                        binding.txtTotalInventary.text = monitorResponse.totalInventario.toString()
-                        categoryList.addAll(monitorResponse.categories)
-                        adapter.notifyDataSetChanged()
-                    } else {
-                        showError()
+                    if (isAdded) {
+                        if (call.isSuccessful) {
+                            monitorResponse = response ?: return@withContext
+                            binding.txtTotalInventary.text =
+                                monitorResponse.totalInventario.toString()
+                            categoryList.addAll(monitorResponse.categories)
+                            adapter.notifyDataSetChanged()
+                        } else {
+                            showError()
+                        }
                     }
                 }
             } catch (e: Exception) {
-                if (retryCount < 3) {
-                    delay(2000)
-                    TotalValuesMonitor(retryCount + 1)
-                } else {
-                    withContext(Dispatchers.Main) {
-                        showError(10)
+                withContext(Dispatchers.Main) {
+                    if (isAdded) {
+                        if (retryCount < 3) {
+                            delay(2000)
+                            TotalValuesMonitor(retryCount + 1)
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                showError(10)
+                            }
+                        }
                     }
                 }
             }
