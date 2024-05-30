@@ -11,6 +11,7 @@ import com.example.smartfood.Request.LoginRequest
 import com.example.smartfood.Service.APIServiceUser
 import com.example.smartfood.databinding.FragmentLoginBinding
 import com.example.smartfood.network.RetrofitClient
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,7 +33,7 @@ class LoginFragment : Fragment() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 loginUser(email, password)
             } else {
-                Toast.makeText(context, "Porfavor ingrese los campos solicitados", Toast.LENGTH_SHORT).show()
+                Snackbar.make(view, "Por favor ingrese los campos solicitados", Snackbar.LENGTH_SHORT).show()
             }
         }
         binding.btnRegister.setOnClickListener {
@@ -47,10 +48,10 @@ class LoginFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful && response.body() != null) {
                     val loginResponse = response.body()
-                    Toast.makeText(requireContext(), "Login exitoso", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(requireView(), "Login exitoso", Snackbar.LENGTH_SHORT).show()
                     findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity())
                 } else {
-                    Toast.makeText(requireContext(), "Error al ingresar las credenciales", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(requireView(), "Error al ingresar las credenciales", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }

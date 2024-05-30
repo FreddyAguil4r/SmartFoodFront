@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
@@ -15,115 +14,106 @@
     app:cardElevation="6dp"
     app:contentPadding="4dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:padding="16dp">
 
         <TextView
             android:id="@+id/item_product"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:text="Zanahoria"
             android:textColor="@color/md_theme_light_inverseOnSurface"
             android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/buttonsLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/quantityTextView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="Cantidad"
-            android:paddingBottom="10dp"
+            android:layout_marginTop="8dp"
+            android:text="Cantidad en stock"
             android:textColor="@color/md_theme_light_inverseOnSurface"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/buttonsLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_product"
-            app:layout_constraintVertical_bias="0.13999999" />
-
-        <!-- Se ha eliminado el TextView dateTextView -->
-
-        <LinearLayout
-            android:id="@+id/buttonsLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.19">
-
-            <Button
-                android:id="@+id/edit_button"
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:contentDescription="Edit"
-                app:icon="@drawable/baseline_edit_24" />
-
-            <Button
-                android:id="@+id/delete_button"
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:contentDescription="Trash"
-                app:icon="@drawable/baseline_restore_from_trash_24" />
-
-        </LinearLayout>
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/quantityTextView">
+            android:gravity="center"
+            android:layout_marginTop="8dp">
 
             <Button
                 android:id="@+id/addProductButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_theme_light_onPrimary"
+                app:icon="@drawable/sp_cart"
                 android:text="Comprar" />
 
+            <Space
+                android:layout_width="4dp"
+                android:layout_height="match_parent" />
+
             <Button
-                android:id="@+id/removeProductButton"
+                android:id="@+id/edit_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="Retirar"
-                android:textColor="@color/md_theme_light_onPrimary" />
+                android:contentDescription="Edit"
+                android:text="Edit"
+                app:icon="@drawable/baseline_edit_24" />
+
+            <Space
+                android:layout_width="4dp"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/delete_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="Trash"
+                android:text="Trash"
+                app:icon="@drawable/baseline_restore_from_trash_24" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/removeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Escriba cantidad a retirar"
+            android:textColor="@color/md_theme_light_inverseOnSurface"
+            android:layout_marginTop="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_marginBottom="10dp"
-                >
-
+                android:layout_weight="1">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextSubstract"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginLeft="10dp"
                     android:background="@color/md_theme_light_onPrimary"
-                    android:inputType="number"/>
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
+            <Button
+                android:id="@+id/removeProductButton"
+                android:layout_marginStart="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/bc_retirar"
+                android:text="Retirar" />
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+
+

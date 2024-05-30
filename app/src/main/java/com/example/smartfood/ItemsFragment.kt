@@ -28,6 +28,8 @@ import com.example.smartfood.Service.APIServiceProduct
 import com.example.smartfood.Service.APIServiceUnit
 import com.example.smartfood.databinding.FragmentItemsBinding
 import com.example.smartfood.network.RetrofitClient
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,9 +82,10 @@ class ItemsFragment : Fragment() {
     private fun openDialogAddNewCategory() {
         val dialogView: View =
             LayoutInflater.from(requireContext()).inflate(R.layout.dialog_layout_add_category, null)
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setView(dialogView)
-        val alertDialog = builder.create()
+        val alertDialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Agregar nueva categoría")
+            .setView(dialogView)
+            .create()
 
         dialogView.findViewById<Button>(R.id.btn_add_category).setOnClickListener {
             val nombre = dialogView.findViewById<EditText>(R.id.edt_new_category).text.toString()
@@ -95,6 +98,7 @@ class ItemsFragment : Fragment() {
         }
         alertDialog.show()
     }
+
     private fun openDialogAddNewProduct() {
         val dialogView: View = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_layout_add_product, null)
         val cancelButton: Button = dialogView.findViewById(R.id.btnCancel)
@@ -120,13 +124,13 @@ class ItemsFragment : Fragment() {
             val selec=adapterView.getItemAtPosition(i)
             val idCapturado=unitList.filter { it.name==selec }[0].id
             idUnit=idCapturado
-
             Log.i("ITEMSEL","$selec")
         }
 
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setView(dialogView)
-        val alertDialog = builder.create()
+        val alertDialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Agregar nuevo producto")
+            .setView(dialogView)
+            .create()
 
         saveNewProductButton.setOnClickListener {
             val nombre = dialogView.findViewById<EditText>(R.id.edtName).text.toString()
@@ -139,6 +143,7 @@ class ItemsFragment : Fragment() {
         }
         alertDialog.show()
     }
+
     private fun addCategory(categoryRequest: CategoryRequest) {
         CoroutineScope(Dispatchers.IO).launch {
             val call =
@@ -146,7 +151,7 @@ class ItemsFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 if (call.isSuccessful) {
                     searchAllCategoriesWithProduct()
-                    Toast.makeText(requireContext(), "Su categoría fue agregada exitosamente.", Toast.LENGTH_LONG).show()
+                    view?.let { Snackbar.make(it, "Su categoría fue agregada exitosamente.", Snackbar.LENGTH_LONG).show() }
                 } else {
                     showError(10)
                 }
@@ -160,7 +165,7 @@ class ItemsFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 if (call.isSuccessful) {
                     searchAllCategoriesWithProduct()
-                    Toast.makeText(requireContext(), "Se agrego su producto exitosamente.", Toast.LENGTH_LONG).show()
+                    view?.let { Snackbar.make(it, "Se agrego su producto exitosamente.", Snackbar.LENGTH_LONG).show() }
                 } else {
                     showError(10)
                 }
@@ -256,7 +261,7 @@ class ItemsFragment : Fragment() {
     }
     private fun fadeInAnimation(view: View) {
         val fadeIn = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
-        fadeIn.duration = 2000
+        fadeIn.duration = 1500
         fadeIn.interpolator = DecelerateInterpolator()
         fadeIn.start()
     }

@@ -92,7 +92,7 @@ class InventoryAdapter(private var productList: List<ProductResponse>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val sup = filteredProductList[position]
         holder.textTitle.text = sup.productName
-        holder.textCantidad.text = "Cantidad: ${sup.quantity.toString()}"
+        holder.textCantidad.text = "Cantidad en stock: ${sup.quantity.toString()}"
 
         if (sup.quantity < 30) {
             showLowQuantityNotification(holder.itemView.context, sup.productName)

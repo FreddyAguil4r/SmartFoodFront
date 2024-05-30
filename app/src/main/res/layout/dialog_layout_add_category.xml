@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="10dp"
+    android:orientation="vertical"
+    android:padding="15dp"
+    app:cardBackgroundColor="@color/md_theme_light_surface"
     android:layout_gravity="center">
 
     <LinearLayout
@@ -11,43 +14,34 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:layout_margin="20dp"
         android:gravity="center"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/textView"
-            android:textColor="@color/md_theme_light_onPrimaryContainer"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_marginBottom="20dp"
-            android:text="Agregar nueva categoria" />
+            android:hint="Categoría">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_new_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/edt_new_category"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:layout_marginBottom="20dp"
-            android:inputType="text"
-            android:hint="Categoría" />
-
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_add_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/md_theme_light_onPrimary"
-            android:textSize="16sp"
-            android:text="Guardar" />
+            android:text="Guardar"
+            style="@style/Widget.Material3.Button" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_cancel_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/md_theme_light_onPrimary"
-            android:textSize="16sp"
-            android:text="Cancelar" />
+            android:text="Cancelar"
+            style="@style/Widget.Material3.Button.OutlinedButton" />
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</LinearLayout>

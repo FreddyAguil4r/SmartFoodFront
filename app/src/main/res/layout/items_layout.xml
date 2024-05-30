@@ -48,7 +48,5 @@
             app:layout_constraintEnd_toEndOf="@id/childCardView"
             app:layout_constraintStart_toStartOf="@id/childCardView"
             app:layout_constraintTop_toBottomOf="@+id/childCardView"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </com.google.android.material.card.MaterialCardView>

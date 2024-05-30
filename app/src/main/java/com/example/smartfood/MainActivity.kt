@@ -2,6 +2,7 @@ package com.example.smartfood
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import com.example.smartfood.databinding.ActivityMainBinding
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
     }
     private fun replaceFragment(fragment : Fragment){
         val fragmentManager = supportFragmentManager
