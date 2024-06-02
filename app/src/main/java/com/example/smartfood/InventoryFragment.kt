@@ -219,7 +219,6 @@ class InventoryFragment : Fragment() {
     private fun showError() {
         Toast.makeText(requireContext(),"Error", Toast.LENGTH_SHORT).show()
     }
-
     private fun showErrorConnection(retryCount: Int = 0) {
         if (retryCount >= 3) {
             Toast.makeText(requireContext(), "Error en la conexión revise su red.", Toast.LENGTH_LONG).show()
@@ -240,7 +239,6 @@ class InventoryFragment : Fragment() {
             }
         }
     }
-
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)

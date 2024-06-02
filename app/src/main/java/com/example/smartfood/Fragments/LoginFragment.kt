@@ -44,14 +44,20 @@ class LoginFragment : Fragment() {
         val userRequest = LoginRequest(email, password)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val response = RetrofitClient.instance.create(APIServiceUser::class.java).login(userRequest)
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful && response.body() != null) {
-                    val loginResponse = response.body()
-                    Snackbar.make(requireView(), "Login exitoso", Snackbar.LENGTH_SHORT).show()
-                    findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity())
-                } else {
-                    Snackbar.make(requireView(), "Error al ingresar las credenciales", Snackbar.LENGTH_SHORT).show()
+            try {
+                val response = RetrofitClient.instance.create(APIServiceUser::class.java).login(userRequest)
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful && response.body() != null) {
+                        val loginResponse = response.body()
+                        Snackbar.make(requireView(), "Login exitoso", Snackbar.LENGTH_SHORT).show()
+                        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity())
+                    } else {
+                        Snackbar.make(requireView(), "Error al ingresar las credenciales", Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Snackbar.make(requireView(), "Error de red: ${e.message}", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }

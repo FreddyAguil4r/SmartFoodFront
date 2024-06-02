@@ -11,6 +11,6 @@ class SecondaryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_secondary)
 
         val actionBar = supportActionBar
-        actionBar?.title = "Pronóstico de demanda mensual"
+        actionBar?.title = "Pronóstico BigQuery"
     }
 }

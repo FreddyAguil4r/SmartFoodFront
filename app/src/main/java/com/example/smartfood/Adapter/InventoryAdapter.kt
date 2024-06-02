@@ -19,6 +19,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.InventoryFragment
 import com.example.smartfood.ModelResponse.ProductResponse
@@ -46,6 +47,8 @@ class InventoryAdapter(private var productList: List<ProductResponse>,
                        private val unitList: List<UnitResponse>
 ):RecyclerView.Adapter<InventoryAdapter.ViewHolder>(),Filterable {
 
+    private val lowStockProducts = mutableListOf<String>()
+    private val highStockProducts = mutableListOf<String>()
     private var idSupplier=0
     private var idUnit=0
     var filteredProductList = mutableListOf<ProductResponse>().apply {
@@ -70,6 +73,7 @@ class InventoryAdapter(private var productList: List<ProductResponse>,
         var editTextSubstract: EditText = itemView.findViewById(R.id.editTextSubstract)
 
         init {
+            checkStockProducts()
             textTitle = itemView.findViewById(R.id.item_product)
             textCantidad = itemView.findViewById(R.id.quantityTextView)
             editButton = itemView.findViewById(R.id.edit_button)
@@ -95,7 +99,12 @@ class InventoryAdapter(private var productList: List<ProductResponse>,
         holder.textCantidad.text = "Cantidad en stock: ${sup.quantity.toString()}"
 
         if (sup.quantity < 30) {
-            showLowQuantityNotification(holder.itemView.context, sup.productName)
+            //lowStockProducts.add(sup.productName)
+            showLowQuantityNotification(holder.itemView.context)
+        }
+
+        if (sup.quantity > 2000) {
+            showHighQuantityNotification(holder.itemView.context)
         }
 
         holder.deleteButton.setOnClickListener {
@@ -200,15 +209,43 @@ class InventoryAdapter(private var productList: List<ProductResponse>,
         }
     }
 
-    private fun showLowQuantityNotification(context: Context, productName: String) {
+    fun checkStockProducts() {
+        for (product in productList) {
+            if (product.quantity < 30) {
+                lowStockProducts.add(product.productName)
+            }
+            if (product.quantity > 2000) {
+                highStockProducts.add(product.productName)
+            }
+        }
+    }
+
+    private fun showLowQuantityNotification(context: Context) {
         val notificationId = 1
 
         val builder = NotificationCompat.Builder(context, InventoryFragment.CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_dialog_alert)
             .setContentTitle("¡Atención!")
-            .setContentText("La cantidad de $productName es baja. ¡Considere reabastecerse!")
+            .setContentText("Los siguientes productos tienen bajo stock: ${lowStockProducts.joinToString(", ")}")
+            .setStyle(NotificationCompat.BigTextStyle().bigText("Los siguientes productos tienen bajo stock: ${lowStockProducts.joinToString(", ")}"))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
+            .setColor(ContextCompat.getColor(context, R.color.md_theme_light_surface))
+
+        with(NotificationManagerCompat.from(context)) {
+            notify(notificationId, builder.build())
+        }
+    }
+
+    private fun showHighQuantityNotification(context: Context) {
+        val notificationId = 2
+
+        val builder = NotificationCompat.Builder(context, InventoryFragment.CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_dialog_alert)
+            .setContentTitle("¡Atención!")
+            .setContentText("Los siguientes productos tienen alto stock: ${highStockProducts.joinToString(", ")}")
+            .setStyle(NotificationCompat.BigTextStyle().bigText("Los siguientes productos tienen alto stock: ${highStockProducts.joinToString(", ")}"))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         with(NotificationManagerCompat.from(context)) {
             notify(notificationId, builder.build())

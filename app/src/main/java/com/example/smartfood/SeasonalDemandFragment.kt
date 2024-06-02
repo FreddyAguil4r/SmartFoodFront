@@ -6,11 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfood.Adapter.SeasonalDemandAdapter
-import com.example.smartfood.ModelResponse.ProductResponseBigQuery
+import com.example.smartfood.ModelResponse.MonthlyDemand
+import com.example.smartfood.ModelResponse.ProductDemand
 import com.example.smartfood.Service.APIServiceBigQuery
 import com.example.smartfood.databinding.FragmentSeasonalDemandBinding
 import com.example.smartfood.network.RetrofitClient
@@ -21,29 +24,29 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SeasonalDemandFragment : Fragment() {
-    private lateinit var binding : FragmentSeasonalDemandBinding
+    private lateinit var binding: FragmentSeasonalDemandBinding
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter : SeasonalDemandAdapter
-    private var productListWithForecastSeasonal = mutableListOf<ProductResponseBigQuery>()
+    private lateinit var adapter: SeasonalDemandAdapter
+    private var productListSorted = mutableListOf<MonthlyDemand>()
+    private var productListSortedDemand = mutableListOf<ProductDemand>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSeasonalDemandBinding.inflate(inflater)
-        recyclerView = binding.recyclerViewSeasonalDemand
+        recyclerView = binding.recyclerSeasonalDemand
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = SeasonalDemandAdapter(productListWithForecastSeasonal)
+        adapter = SeasonalDemandAdapter(productListSortedDemand)
         recyclerView.adapter = adapter
         callStoreProcedureSeasonal()
 
         return binding.root
     }
-
     private fun callStoreProcedureSeasonal(retryCount: Int = 0) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = RetrofitClient.instance.create(APIServiceBigQuery::class.java).callSp("/bigquery/callspbimensual")
+                val response = RetrofitClient.instance.create(APIServiceBigQuery::class.java).callSp("/bigquery/callsp")
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         Toast.makeText(requireContext(), "Llamada exitosa.", Toast.LENGTH_LONG).show()
@@ -65,15 +68,17 @@ class SeasonalDemandFragment : Fragment() {
         }
     }
 
-    private fun getAllProductsWithDemandBq(retryCount: Int = 0){
+    private fun getAllProductsWithDemandBq(retryCount: Int = 0) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = RetrofitClient.instance.create(APIServiceBigQuery::class.java).getAllProductsWithDemand("/bigquery/bimensual")
+                val response = RetrofitClient.instance.create(APIServiceBigQuery::class.java).getAllProductsSorted("/bigquery/formated")
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         val productListBq = response.body() ?: emptyList()
-                        productListWithForecastSeasonal.clear()
-                        productListWithForecastSeasonal.addAll(productListBq)
+                        productListSorted.clear()
+                        productListSorted.addAll(productListBq)
+                        productListSortedDemand.clear()
+                        productListSorted.forEach { productListSortedDemand.addAll(it.data) }
                         adapter.notifyDataSetChanged()
                         Toast.makeText(requireContext(), "Datos recibidos con éxito.", Toast.LENGTH_LONG).show()
                     } else {
@@ -81,7 +86,7 @@ class SeasonalDemandFragment : Fragment() {
                     }
                 }
             } catch (e: Exception) {
-                if (retryCount  < 3) {
+                if (retryCount < 3) {
                     delay(2000)
                     getAllProductsWithDemandBq(retryCount + 1)
                 } else {

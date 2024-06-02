@@ -20,6 +20,7 @@ import com.example.smartfood.Request.SupplierRequest
 import com.example.smartfood.Service.APIServiceSupplier
 import com.example.smartfood.databinding.FragmentSupplierBinding
 import com.example.smartfood.network.RetrofitClient
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -178,6 +179,6 @@ class SupplierFragment : Fragment() {
     }
 
     private fun showErrorDelete() {
-        Toast.makeText(requireContext(),"Error delete method",Toast.LENGTH_SHORT).show()
+        Snackbar.make(requireView(), "No se puede eliminar este proveedor porque tiene productos asociados.", Snackbar.LENGTH_SHORT).show()
     }
 }

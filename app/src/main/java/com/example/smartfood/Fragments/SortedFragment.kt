@@ -20,6 +20,7 @@ import com.example.smartfood.R
 import com.example.smartfood.Service.APIServiceBigQuery
 import com.example.smartfood.databinding.FragmentSortedBinding
 import com.example.smartfood.network.RetrofitClient
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -80,7 +81,7 @@ class SortedFragment : Fragment() {
                 val response = RetrofitClient.instance.create(APIServiceBigQuery::class.java).callSp("/bigquery/callsp")
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-                        Toast.makeText(requireContext(), "Llamada exitosa.", Toast.LENGTH_LONG).show()
+                        Snackbar.make(requireView(), "Llamada exitosa.", Snackbar.LENGTH_SHORT).show()
                         getAllProductsSortedWithDemandBq()
                     } else {
                         showError()
@@ -114,7 +115,7 @@ class SortedFragment : Fragment() {
                         productListSorted.addAll(productListBq) // Asumiendo que response.body() devuelve List<MonthlyDemand>
                         setupMonthSpinner(productListSorted)
                         adapter.notifyDataSetChanged()
-                        Toast.makeText(requireContext(), "Datos recibidos con éxito.", Toast.LENGTH_LONG).show()
+                        Snackbar.make(requireView(), "Cargando data de pronostico de demanda.", Snackbar.LENGTH_SHORT).show()
                     } else {
                         showError()
                     }

@@ -1,6 +1,7 @@
 package com.example.smartfood.Service
 
 import com.example.smartfood.ModelResponse.ProductResponse
+import com.example.smartfood.ModelResponse.ProductResponseLittle
 import com.example.smartfood.Request.ProductRequest
 import com.example.smartfood.Request.SubstractProductRequest
 import com.example.smartfood.Request.SupplierRequest
@@ -17,6 +18,8 @@ import retrofit2.http.Url
 interface APIServiceProduct {
     @GET
     suspend fun getProductById(@Url url:String): Response<ProductResponse>
+    @GET
+    suspend fun getAllProductsLittle(@Url url:String): Response<List<ProductResponse>>
     @GET
     suspend fun getAllProducts(@Url url:String): Response<List<ProductResponse>>
     @POST("product")

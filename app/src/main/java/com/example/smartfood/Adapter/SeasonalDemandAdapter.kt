@@ -5,10 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.smartfood.ModelResponse.ProductDemand
 import com.example.smartfood.ModelResponse.ProductResponseBigQuery
 import com.example.smartfood.R
 
-class SeasonalDemandAdapter(private val categoryListForecast : List<ProductResponseBigQuery>):
+class SeasonalDemandAdapter(private val productListSorted : List<ProductDemand>):
 RecyclerView.Adapter<SeasonalDemandAdapter.ViewHolder>(){
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -25,11 +26,11 @@ RecyclerView.Adapter<SeasonalDemandAdapter.ViewHolder>(){
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int = categoryListForecast.size
+    override fun getItemCount(): Int = productListSorted.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = categoryListForecast[position]
-        holder.textProductName.text = item.productName.toString()
+        val item = productListSorted[position]
+        holder.textProductName.text = item.productName
         holder.textForecastDemand.text = item.cantidadComprar.toString()
     }
 }

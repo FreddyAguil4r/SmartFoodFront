@@ -2,24 +2,36 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:padding="10dp"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.SearchView
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pronostico de demanda mensual"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="10dp" />
+
+    <Space
         android:id="@+id/searchViewInventory"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/search_view_bg"
         android:iconifiedByDefault="false"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!-- ScrollView -->
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="600dp"
+        android:layout_marginTop="25dp"
         app:layout_constraintTop_toBottomOf="@id/searchViewInventory"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +65,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:visibility="gone"
         android:src="@drawable/baseline_add_circle_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

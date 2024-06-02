@@ -47,6 +47,7 @@ class ItemsFragment : Fragment() {
     private val categoryListI = mutableListOf<CategoryResponseI>()
     private val dataSpinnerCategory = mutableListOf<String>()
     private val dataSpinnerUnits = mutableListOf<String>()
+    private val productList = mutableListOf<String>()
     private var idCategory=0
     private var idUnit=0
 
@@ -82,16 +83,23 @@ class ItemsFragment : Fragment() {
     private fun openDialogAddNewCategory() {
         val dialogView: View =
             LayoutInflater.from(requireContext()).inflate(R.layout.dialog_layout_add_category, null)
+
+        searchAllCategories()
         val alertDialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Agregar nueva categoría")
             .setView(dialogView)
             .create()
 
         dialogView.findViewById<Button>(R.id.btn_add_category).setOnClickListener {
-            val nombre = dialogView.findViewById<EditText>(R.id.edt_new_category).text.toString()
-            val categoryRequest = CategoryRequest(nombre)
-            addCategory(categoryRequest)
-            alertDialog.dismiss()
+            val nombre = dialogView.findViewById<EditText>(R.id.edt_new_category).text.toString().lowercase()
+
+            if (dataSpinnerCategory.any { it.lowercase() == nombre }) {
+                Snackbar.make(it, "Categoría duplicada.", Snackbar.LENGTH_LONG).show()
+            }else {
+                val categoryRequest = CategoryRequest(nombre)
+                addCategory(categoryRequest)
+                alertDialog.dismiss()
+            }
         }
         dialogView.findViewById<Button>(R.id.btn_cancel_category).setOnClickListener {
             alertDialog.dismiss()
@@ -103,7 +111,7 @@ class ItemsFragment : Fragment() {
         val dialogView: View = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_layout_add_product, null)
         val cancelButton: Button = dialogView.findViewById(R.id.btnCancel)
         val saveNewProductButton: Button = dialogView.findViewById(R.id.btnSave)
-
+        searchAllProducts()
         searchAllCategories()
         searchAllUnits()
         val spinnerCategory : TextInputLayout = dialogView.findViewById(R.id.spinner_category)
@@ -133,10 +141,15 @@ class ItemsFragment : Fragment() {
             .create()
 
         saveNewProductButton.setOnClickListener {
-            val nombre = dialogView.findViewById<EditText>(R.id.edtName).text.toString()
-            val productRequest = ProductRequest(nombre, idCategory, idUnit)
-            addProduct(productRequest)
-            alertDialog.dismiss()
+            val nombre = dialogView.findViewById<EditText>(R.id.edtName).text.toString().lowercase()
+
+            if (productList.any { it.lowercase() == nombre }) {
+                Snackbar.make(it, "Producto duplicado.", Snackbar.LENGTH_LONG).show()
+            } else {
+                val productRequest = ProductRequest(nombre, idCategory, idUnit)
+                addProduct(productRequest)
+                alertDialog.dismiss()
+            }
         }
         cancelButton.setOnClickListener {
             alertDialog.dismiss()
@@ -166,6 +179,22 @@ class ItemsFragment : Fragment() {
                 if (call.isSuccessful) {
                     searchAllCategoriesWithProduct()
                     view?.let { Snackbar.make(it, "Se agrego su producto exitosamente.", Snackbar.LENGTH_LONG).show() }
+                } else {
+                    showError(10)
+                }
+            }
+        }
+    }
+    private fun searchAllProducts(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val call = RetrofitClient.instance.create(APIServiceProduct::class.java)
+                .getAllProductsLittle("product/quantity")
+            val sup = call.body()
+            withContext(Dispatchers.Main) {
+                if (call.isSuccessful) {
+                    val products = sup ?: emptyList()
+                    productList.clear()
+                    productList.addAll(products.map { it.productName })
                 } else {
                     showError(10)
                 }

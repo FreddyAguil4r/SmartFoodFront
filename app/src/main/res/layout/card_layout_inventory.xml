@@ -51,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_theme_light_onPrimary"
                 app:icon="@drawable/sp_cart"
+                android:textSize="11sp"
                 android:text="Comprar" />
 
             <Space
@@ -62,7 +63,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="Edit"
-                android:text="Edit"
+                android:text="Editar"
+                android:textSize="11sp"
                 app:icon="@drawable/baseline_edit_24" />
 
             <Space
@@ -74,7 +76,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="Trash"
-                android:text="Trash"
+                android:textSize="11sp"
+                android:text="Eliminar"
                 app:icon="@drawable/baseline_restore_from_trash_24" />
         </LinearLayout>
 
